@@ -25,7 +25,7 @@ public class Lecture {
         this.StartHour = Integer.parseInt(Start[0]);
         this.StartMinute = Integer.parseInt(Start[1]);
 
-        String[] End = StartTime.split(":");
+        String[] End = EndTime.split(":");
         this.EndHour = Integer.parseInt(End[0]);
         this.EndMinute = Integer.parseInt(End[1]);
 

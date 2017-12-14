@@ -1,6 +1,6 @@
 package com.example.root.sdsu_gmap;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by root on 12/12/17.
@@ -15,9 +15,9 @@ public class Course {
     private String ScheduleID = "";
     private String Instructor = "";
 
-    private ArrayList<Lecture> Lectures = new ArrayList<>();
+    private List<Lecture> Lectures;
 
-    public Course(String Course, String CourseDescription, String CourseFormat, int Units, String ScheduleID, String Instructor, ArrayList<Lecture> Lectures) {
+    public Course(String Course, String CourseDescription, String CourseFormat, int Units, String ScheduleID, String Instructor, List<Lecture> Lectures) {
         this.Course = Course;
         this.CourseDescription = CourseDescription;
         this.CourseFormat = CourseFormat;
@@ -51,7 +51,7 @@ public class Course {
         return Instructor;
     }
 
-    public ArrayList<Lecture> getLectures() {
+    public List<Lecture> getLectures() {
         return Lectures;
     }
 }
