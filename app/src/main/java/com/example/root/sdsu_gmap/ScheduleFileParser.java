@@ -3,6 +3,7 @@ package com.example.root.sdsu_gmap;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import ge.sanapps.jsonparser.JSONParser;
 
 /**
  * Created by root on 12/12/17.
@@ -54,14 +55,12 @@ public class ScheduleFileParser {
             Courses.add(tempCourse);
         }
 
-        StudentInformation studentInfo = new StudentInformation(
+        return new StudentInformation(
                 (String) parsed.get("FirstName"),
                 (String) parsed.get("MiddleName"),
                 (String) parsed.get("LastName"),
                 Courses
         );
-
-        return studentInfo;
 
     }
 
