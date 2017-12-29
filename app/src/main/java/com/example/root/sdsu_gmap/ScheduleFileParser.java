@@ -11,10 +11,8 @@ import ge.sanapps.jsonparser.JSONParser;
 
 public class ScheduleFileParser {
 
-    public static StudentInformation parseScheduleFile(String content)
+    public static StudentInformation parseScheduleFile(HashMap<String, Object> parsed)
     {
-        HashMap<String, Object> parsed = JSONParser.Parse(content);
-
         List<Course> Courses = new ArrayList<>();
         HashMap<String, Object> parsedCourses = (HashMap<String, Object>) parsed.get("Courses");
 

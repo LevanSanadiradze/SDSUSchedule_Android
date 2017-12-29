@@ -34,97 +34,24 @@ public class RegistrationActivity extends AppCompatActivity {
         parameters.add("Email=" + email.getText());
         parameters.add("Password=" + pwd.getText());
 
-        NetworkCommunicator NC = new NetworkCommunicator(Constants.HOST + "registration.php", parameters);
+        NetworkCommunicator NC = new NetworkCommunicator(Constants.HOST + "registration.php", parameters, "");
         try {
-            HashMap<String, Object> Response = NC.execute().get();
+            HashMap<String, Object> Response = (HashMap<String, Object>) NC.execute().get().first;
             String ErrorCode = Response.get("ErrorCode").toString();
             String Status = Response.get("Status").toString();
 
             if(ErrorCode.equals("0") && Status.equals("0"))
                 finish();
             else if(ErrorCode.equals("1"))
-                return;
+                return;//TODO
             else if(ErrorCode.equals("2"))
-                return;
+                return;//TODO
             else if(ErrorCode.equals("3"))
-                return;
+                return;//TODO
 
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
 
-    }
-
-    public class UserRegistrationTask extends AsyncTask<Void, Void, Integer> {
-
-        private final String email;
-        private final String pwd;
-
-        UserRegistrationTask(String email, String pwd) {
-            this.email = email;
-            this.pwd = pwd;
-        }
-
-        @Override
-        protected Integer doInBackground(Void... params) {
-
-            try {
-                URL LoginURL = new URL(Constants.HOST + "registration.php?Email=" + email + "&Password=" + pwd);
-                //TODO: Convert this to https (HttpsURLConnection)
-                HttpURLConnection conn = (HttpURLConnection) LoginURL.openConnection();
-
-                BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-
-                String Response = in.readLine();
-
-                if(Response.equals("0"))
-                    return 0;
-                else if(Response.equals("1"))
-                    return 1;
-                else if(Response.equals("2"))
-                    return 2;
-                else if(Response.equals("3"))
-                    return 3;
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            return -1;
-        }
-
-        @Override
-        protected void onPostExecute(final Integer success) {
-            //mAuthTask = null;
-            //showProgress(false);
-
-            if(success == -1) {
-                //mEmailView.setError(getString(R.string.error_connection_problem));
-                //mEmailView.requestFocus();
-            }
-            else if (success == 0)
-            {
-                finish();
-            }
-            else if(success == 1) {
-//                mEmailView.setError(getString(R.string.error_incorrect_email_or_password));
-//                mEmailView.requestFocus();
-            }
-            else if(success == 2) {
-//                mEmailView.setError(getString(R.string.error_unknown));
-//                mEmailView.requestFocus();
-            }
-            else if(success == 3) {
-//                mEmailView.setError(getString(R.string.error_unknown));
-//                mEmailView.requestFocus();
-            }
-
-        }
-
-        @Override
-        protected void onCancelled() {
-//            mAuthTask = null;
-//            showProgress(false);
-        }
     }
 }
