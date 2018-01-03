@@ -4,15 +4,12 @@ import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.INotificationSideChannel;
-import android.text.Layout;
 import android.util.DisplayMetrics;
 import android.util.Pair;
 import android.view.LayoutInflater;
@@ -26,8 +23,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -56,7 +53,6 @@ public class LoggedInActivity extends AppCompatActivity
 
     public StudentInformation studentInfo;
     private String Cookies = "";
-    //private Object ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,18 +121,34 @@ public class LoggedInActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+        RelativeLayout tabsContainer = findViewById(R.id.tabscontainer);
 
-        } else if (id == R.id.nav_slideshow) {
+        for (int i = 0; i < tabsContainer.getChildCount(); i++)
+        {
+            tabsContainer.getChildAt(i).setVisibility(View.GONE);
+        }
 
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+        //TODO
+        if (id == R.id.Announcements_menuitem) {
+            tabsContainer.findViewById(R.id.Announcements_tab).setVisibility(View.VISIBLE);
+        }
+        else if (id == R.id.Courses_menuitem) {
+            tabsContainer.findViewById(R.id.Courses_tab).setVisibility(View.VISIBLE);
+        }
+        else if (id == R.id.Tasks_menuitem) {
+            tabsContainer.findViewById(R.id.Tasks_tab).setVisibility(View.VISIBLE);
+        }
+        else if (id == R.id.Events_menuitem) {
+            tabsContainer.findViewById(R.id.Events_tab).setVisibility(View.VISIBLE);
+        }
+        else if (id == R.id.Clubs_menuitem) {
+            tabsContainer.findViewById(R.id.Clubs_tab).setVisibility(View.VISIBLE);
+        }
+        else if (id == R.id.Contact_menuitem) {
+            tabsContainer.findViewById(R.id.Contact_tab).setVisibility(View.VISIBLE);
+        }
+        else if (id == R.id.Settings_menuitem) {
+            tabsContainer.findViewById(R.id.Settings_tab).setVisibility(View.VISIBLE);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

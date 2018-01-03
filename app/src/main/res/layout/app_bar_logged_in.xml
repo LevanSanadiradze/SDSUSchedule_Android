@@ -20,7 +20,58 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_logged_in" />
+    <RelativeLayout
+        android:id="@+id/tabscontainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <include
+            android:id="@+id/Announcements_tab"
+            layout="@layout/tab_announcements" />
+
+        <include
+            android:id="@+id/Courses_tab"
+            layout="@layout/tab_courses"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
+
+        <include
+            android:id="@+id/Tasks_tab"
+            layout="@layout/tab_tasks"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
+
+        <include
+            android:id="@+id/Events_tab"
+            layout="@layout/tab_events"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
+
+        <include
+            android:id="@+id/Clubs_tab"
+            layout="@layout/tab_clubs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
+
+        <include
+            android:id="@+id/Contact_tab"
+            layout="@layout/tab_contact"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
+
+        <include
+            android:id="@+id/Settings_tab"
+            layout="@layout/tab_settings"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
+
+    </RelativeLayout>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"

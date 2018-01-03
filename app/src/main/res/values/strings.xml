@@ -1,9 +1,9 @@
 <resources>
-    <string name="app_name">SDSU-G MAP</string>
-    <string name="title_activity_logged_in">LoggedInActivity</string>
+    <string name="app_name">SDSU Schedule</string>
+    <string name="title_activity_logged_in">SDSU Schedule</string>
 
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="navigation_drawer_open">Open menu</string>
+    <string name="navigation_drawer_close">Close menu</string>
 
     <string name="action_settings">Settings</string>
 </resources>
