@@ -28,7 +28,7 @@ dependencies {
     compile 'com.android.support:appcompat-v7:26.+'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.github.LevanSanadiradze:JSONParser_Android:1.0'
-    compile 'com.github.LevanSanadiradze:TabbedScrollView_Android:1.0'
+    compile 'com.github.LevanSanadiradze:TabbedScrollView_Android:1.5'
 
     testCompile 'junit:junit:4.12'
 }

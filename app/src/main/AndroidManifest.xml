@@ -26,10 +26,6 @@
             android:configChanges="orientation"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".LoggedInActivity2"
-            android:configChanges="orientation"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".LoggedInActivity"
             android:label="@string/title_activity_logged_in"
             android:parentActivityName=".MainActivity"
