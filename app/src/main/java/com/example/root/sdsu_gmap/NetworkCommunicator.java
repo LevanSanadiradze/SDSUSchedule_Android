@@ -11,6 +11,7 @@ import java.io.InputStreamReader;
 import java.net.CookieManager;
 import java.net.HttpCookie;
 import java.net.HttpURLConnection;
+import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -53,6 +54,7 @@ public class NetworkCommunicator extends AsyncTask<Void, Void, Pair<Object, Cook
             conn.setInstanceFollowRedirects(false);
             conn.setUseCaches(false);
             conn.setRequestMethod("POST");
+            conn.setConnectTimeout(Constants.CONNECTION_TIMEOUT_MS);
             conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
             conn.setRequestProperty("charset", "utf-8");
             conn.setRequestProperty("Content-Length", Integer.toString(postData.length));
@@ -83,7 +85,11 @@ public class NetworkCommunicator extends AsyncTask<Void, Void, Pair<Object, Cook
 
             return new Pair<>((Object)JSONParser.Parse(content.toString()), cookieManager);
 
-        } catch (IOException e) {
+        }
+        catch (SocketTimeoutException e) {
+            return null;
+        }
+        catch (IOException e) {
             e.printStackTrace();
         }
 

@@ -1,12 +1,17 @@
 package com.example.root.sdsu_gmap;
 
+import android.animation.Animator;
+import android.animation.AnimatorSet;
+import android.animation.ValueAnimator;
 import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.renderscript.Sampler;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -23,6 +28,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.ScaleAnimation;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TableLayout;
@@ -128,7 +137,6 @@ public class LoggedInActivity extends AppCompatActivity
             tabsContainer.getChildAt(i).setVisibility(View.GONE);
         }
 
-        //TODO
         if (id == R.id.Announcements_menuitem) {
             tabsContainer.findViewById(R.id.Announcements_tab).setVisibility(View.VISIBLE);
         }
@@ -158,57 +166,65 @@ public class LoggedInActivity extends AppCompatActivity
 
     private void loadStudentSchedule()
     {
-        NetworkCommunicator NC = new NetworkCommunicator(Constants.HOST + "getStudentSchedule.php", new ArrayList<String>(), Cookies);
+        final Context ctx  = this;
 
-        Pair<Object, CookieManager> data = null;
-        try {
-            data = NC.execute().get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-        HashMap<String, Object> Response = (HashMap<String, Object>) data.first;
-
-        if(Response.get("ErrorCode").equals("-1"))
-            finish();
-        else if(Response.get("ErrorCode").equals("0"))
+        new NetworkCommunicator(Constants.HOST + "getStudentSchedule.php", new ArrayList<String>(), Cookies)
         {
-            if(Response.get("Schedule").equals(""))
-            {
-                AlertDialog.Builder builder;
+            @Override
+            protected void onPostExecute(Pair<Object, CookieManager> data) {
+                super.onPostExecute(data);
 
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Light_Dialog_Alert);
-                } else {
-                    builder = new AlertDialog.Builder(this);
+                if(data == null)
+                {
+                    Toast.makeText(ctx, "Unexpected Error, Please check your internet connection.", Toast.LENGTH_LONG).show();
+                    finish();
+                    return;
                 }
 
-                builder.setTitle("Schedule file missing!")
-                        .setMessage("You do not have a schedule file uploaded! You can upload it now, or later in the Settings.")
-                        .setPositiveButton("Upload Now", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                openFilePicker(null);
-                            }
-                        })
-                        .setNegativeButton("Later", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                //Do nothing
-                            }
-                        })
-                        .setIcon(android.R.drawable.ic_dialog_alert)
-                        .show();
+                HashMap<String, Object> Response = (HashMap<String, Object>) data.first;
+
+                if(Response.get("ErrorCode").equals("-1"))
+                    finish();
+                else if(Response.get("ErrorCode").equals("0"))
+                {
+                    if(Response.get("Schedule").equals(""))
+                    {
+                        AlertDialog.Builder builder;
+
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            builder = new AlertDialog.Builder(ctx, android.R.style.Theme_Material_Light_Dialog_Alert);
+                        } else {
+                            builder = new AlertDialog.Builder(ctx);
+                        }
+
+                        builder.setTitle("Schedule file missing!")
+                                .setMessage("You do not have a schedule file uploaded! You can upload it now, or later in the Settings.")
+                                .setPositiveButton("Upload Now", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        openFilePicker(null);
+                                    }
+                                })
+                                .setNegativeButton("Later", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        //Do nothing
+                                    }
+                                })
+                                .setIcon(android.R.drawable.ic_dialog_alert)
+                                .show();
+                    }
+                    else
+                    {
+                        studentInfo = ScheduleFileParser.parseScheduleFile((HashMap<String, Object>) Response.get("Schedule"));
+                        AddInfoToViews();
+                    }
+                }
+                else
+                {
+                    Toast.makeText(ctx, "Unexpected error: " + Response.get("ErrorCode"), Toast.LENGTH_LONG).show();
+                }
             }
-            else
-            {
-                this.studentInfo = ScheduleFileParser.parseScheduleFile((HashMap<String, Object>) Response.get("Schedule"));
-                AddInfoToViews();
-            }
-        }
-        else
-        {
-            Toast.makeText(this, "Unexpected error: " + Response.get("ErrorCode"), Toast.LENGTH_LONG).show();
-        }
+        }.execute();
+
 
     }
 
@@ -302,6 +318,9 @@ public class LoggedInActivity extends AppCompatActivity
         AddScheduleInfoToScrollViews();
 
         NavigationView navigationView = findViewById(R.id.nav_view);
+
+        navigationView.getMenu().getItem(0).setChecked(true);
+
         View headerView = navigationView.getHeaderView(0);
 
         TextView StudentNameTextView = headerView.findViewById(R.id.StudentNameTextView);
@@ -483,6 +502,16 @@ public class LoggedInActivity extends AppCompatActivity
 
 
                     View eventLayout = inflater.inflate(R.layout.schedule_calendar_event, null, false);
+
+                    eventLayout.setLongClickable(true);
+                    eventLayout.setOnLongClickListener(new View.OnLongClickListener() {
+                        @Override
+                        public boolean onLongClick(View view) {
+                            openEventDialog();
+                            return true;
+                        }
+                    });
+
                     ((TextView) eventLayout.findViewById(R.id.CourseNameTextView)).setText(studentInfo.getCourses().get(tempAL.get(e).first).getCourse());
 
                     ((TextView) eventLayout.findViewById(R.id.LectureBuildingTextView)).setText(tempLecture.getPartner() + " " + tempLecture.getBuilding() + " " + tempLecture.getRoom());
@@ -507,4 +536,29 @@ public class LoggedInActivity extends AppCompatActivity
         SimpleDateFormat dayFormat = new SimpleDateFormat(Pattern, Locale.US);
         return dayFormat.format(date.getTime());
     }
+
+    private void openEventDialog()
+    {
+        AlertDialog.Builder edBuilder = new AlertDialog.Builder(this);
+        View edView = getLayoutInflater().inflate(R.layout.dialog_lecture, null);
+
+        edBuilder.setView(edView);
+        AlertDialog eDialog = edBuilder.create();
+        eDialog.show();
+    }
+
+    public void expandDialogItem(View v)
+    {
+        final View body = v.findViewById(R.id.body);
+
+        if(body.getVisibility() == View.GONE)
+        {
+            body.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            body.setVisibility(View.GONE);
+        }
+    }
+
 }

@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.util.Pair;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -47,40 +48,48 @@ public class MainActivity extends AppCompatActivity {
         final EditText login = (EditText) findViewById(R.id.LoginField);
         final EditText pass = (EditText) findViewById(R.id.PasswordField);
 
+        final Context ctx = this;
+
         ArrayList<String> parameters = new ArrayList<>();
         parameters.add("Email=" + login.getText());
         parameters.add("Password=" + pass.getText());
 
-        NetworkCommunicator NC = new NetworkCommunicator(Constants.HOST + "login.php", parameters, "");
-        try {
+        new NetworkCommunicator(Constants.HOST + "login.php", parameters, "") {
+            @Override
+            protected void onPostExecute(Pair<Object, CookieManager> data) {
+                super.onPostExecute(data);
 
-            Pair<Object, CookieManager> data = NC.execute().get();
-            HashMap<String, Object> Response = (HashMap<String, Object>) data.first;
-            CookieManager cookieManager = data.second;
+                if(data == null)
+                {
+                    Toast.makeText(ctx, "Unexpected Error, Please check your internet connection.", Toast.LENGTH_LONG).show();
+                    return;
+                }
 
-            String ErrorCode = Response.get("ErrorCode").toString();
-            String Status = Response.get("Status").toString();
+                HashMap<String, Object> Response = (HashMap<String, Object>) data.first;
+                CookieManager cookieManager = data.second;
 
-            if(ErrorCode.equals("0") && Status.equals("0"))
-            {
-                String StoredCookies = saveCookiesOnInternalStorage(cookieManager);
+                String ErrorCode = Response.get("ErrorCode").toString();
+                String Status = Response.get("Status").toString();
 
-                Intent LoggedInActivity = new Intent(getBaseContext(), LoggedInActivity.class);
-                LoggedInActivity.putExtra("Cookies", StoredCookies);
-                startActivity(LoggedInActivity);
+                if(ErrorCode.equals("0") && Status.equals("0"))
+                {
+                    String StoredCookies = saveCookiesOnInternalStorage(cookieManager);
+
+                    Intent LoggedInActivity = new Intent(getBaseContext(), LoggedInActivity.class);
+                    LoggedInActivity.putExtra("Cookies", StoredCookies);
+                    startActivity(LoggedInActivity);
+                }
+                else if(ErrorCode.equals("1"))
+                {
+                    //TODO
+                }
+                else if(ErrorCode.equals("2"))
+                {
+                    //TODO;
+                }
             }
-            else if(ErrorCode.equals("1"))
-            {
-                //TODO
-            }
-            else if(ErrorCode.equals("2"))
-            {
-                //TODO;
-            }
+        }.execute();
 
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-        }
     }
 
     private String saveCookiesOnInternalStorage(CookieManager cookieManager)

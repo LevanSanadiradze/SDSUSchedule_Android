@@ -6,31 +6,31 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/Announcements_menuitem"
-            android:icon="@drawable/ic_menu_camera"
+            android:icon="@drawable/ic_announcement"
             android:title="Announcements" />
         <item
             android:id="@+id/Courses_menuitem"
-            android:icon="@drawable/ic_menu_gallery"
+            android:icon="@drawable/ic_courses"
             android:title="Courses" />
         <item
             android:id="@+id/Tasks_menuitem"
-            android:icon="@drawable/ic_menu_slideshow"
+            android:icon="@drawable/ic_tasks"
             android:title="Tasks" />
         <item
             android:id="@+id/Events_menuitem"
-            android:icon="@drawable/ic_menu_manage"
+            android:icon="@drawable/ic_events"
             android:title="Events" />
         <item
             android:id="@+id/Clubs_menuitem"
-            android:icon="@drawable/ic_menu_manage"
+            android:icon="@drawable/ic_clubs"
             android:title="Clubs" />
         <item
             android:id="@+id/Contact_menuitem"
-            android:icon="@drawable/ic_menu_manage"
+            android:icon="@drawable/ic_contact"
             android:title="Contact" />
         <item
             android:id="@+id/Settings_menuitem"
-            android:icon="@drawable/ic_menu_manage"
+            android:icon="@drawable/ic_settings"
             android:title="Settings" />
     </group>
 
