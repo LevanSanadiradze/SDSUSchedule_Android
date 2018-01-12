@@ -2,12 +2,14 @@ package com.example.root.sdsu_gmap;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Pair;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
@@ -18,50 +20,74 @@ import java.io.InputStreamReader;
 import java.net.CookieManager;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.concurrent.ExecutionException;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+
+    private Button login;
+    private EditText email;
+    private EditText password;
+    private TextView forgotPassword;
+    private TextView register;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        initView();
 
-        String StoredCookies = getCookiesOnInternalStorage();
+        App.get().setCookies(getCookiesOnInternalStorage());
 
-        if(!StoredCookies.equals(""))
-        {
+        if (!App.get().getCookies().equals("")) {
             Intent LoggedInActivity = new Intent(getBaseContext(), LoggedInActivity.class);
-            LoggedInActivity.putExtra("Cookies", StoredCookies);
             startActivity(LoggedInActivity);
+            finish();
         }
     }
 
-    public void Registration(View v)
-    {
-        Intent RegActivity = new Intent(this, RegistrationActivity.class);
-        startActivity(RegActivity);
+    private void initView() {
+        login = (Button) findViewById(R.id.login);
+        email = (EditText) findViewById(R.id.email);
+        password = (EditText) findViewById(R.id.password);
+        forgotPassword = (TextView) findViewById(R.id.forgot_password);
+        register = (TextView) findViewById(R.id.register);
+
+        login.setOnClickListener(this);
+        register.setOnClickListener(this);
+        forgotPassword.setOnClickListener(this);
     }
 
-    public void Login(View v)
-    {
-        final EditText login = (EditText) findViewById(R.id.LoginField);
-        final EditText pass = (EditText) findViewById(R.id.PasswordField);
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.login:
+                if (TextUtils.isEmpty(email.getText().toString().trim()) || TextUtils.isEmpty(password.getText().toString().trim())) {
+                    Toast.makeText(MainActivity.this, "Please enter Red Id and Password", Toast.LENGTH_LONG).show();
+                } else {
+                    Login();
+                }
+                break;
+            case R.id.register:
+                Intent RegActivity = new Intent(this, RegistrationActivity.class);
+                startActivity(RegActivity);
+                break;
+            case R.id.forgot_password:
 
-        final Context ctx = this;
+                break;
+        }
+    }
 
+    private void Login() {
         ArrayList<String> parameters = new ArrayList<>();
-        parameters.add("Email=" + login.getText());
-        parameters.add("Password=" + pass.getText());
+        parameters.add("Email=" + email.getText().toString().trim());
+        parameters.add("Password=" + password.getText().toString().trim());
 
         new NetworkCommunicator(Constants.HOST + "login.php", parameters, "") {
             @Override
             protected void onPostExecute(Pair<Object, CookieManager> data) {
                 super.onPostExecute(data);
 
-                if(data == null)
-                {
-                    Toast.makeText(ctx, "Unexpected Error, Please check your internet connection.", Toast.LENGTH_LONG).show();
+                if (data == null) {
+                    Toast.makeText(MainActivity.this, "Unexpected Error, Please check your internet connection.", Toast.LENGTH_LONG).show();
                     return;
                 }
 
@@ -71,34 +97,27 @@ public class MainActivity extends AppCompatActivity {
                 String ErrorCode = Response.get("ErrorCode").toString();
                 String Status = Response.get("Status").toString();
 
-                if(ErrorCode.equals("0") && Status.equals("0"))
-                {
-                    String StoredCookies = saveCookiesOnInternalStorage(cookieManager);
+                if (ErrorCode.equals("0") && Status.equals("0")) {
+                    App.get().setCookies(saveCookiesOnInternalStorage(cookieManager));
 
                     Intent LoggedInActivity = new Intent(getBaseContext(), LoggedInActivity.class);
-                    LoggedInActivity.putExtra("Cookies", StoredCookies);
                     startActivity(LoggedInActivity);
-                }
-                else if(ErrorCode.equals("1"))
-                {
+                    finish();
+                } else if (ErrorCode.equals("1")) {
                     //TODO
-                }
-                else if(ErrorCode.equals("2"))
-                {
+                } else if (ErrorCode.equals("2")) {
                     //TODO;
                 }
             }
         }.execute();
-
     }
 
-    private String saveCookiesOnInternalStorage(CookieManager cookieManager)
-    {
+    private String saveCookiesOnInternalStorage(CookieManager cookieManager) {
         String FILENAME = Constants.COOKIES_FILE_NAME;
         String value = "";
 
         if (cookieManager.getCookieStore().getCookies().size() > 0) {
-            value = TextUtils.join(";",  cookieManager.getCookieStore().getCookies());
+            value = TextUtils.join(";", cookieManager.getCookieStore().getCookies());
         }
 
         FileOutputStream fos = null;
@@ -118,8 +137,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private String getCookiesOnInternalStorage()
-    {
+    private String getCookiesOnInternalStorage() {
         String FILENAME = Constants.COOKIES_FILE_NAME;
         String value = "";
 

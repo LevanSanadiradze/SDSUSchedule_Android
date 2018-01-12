@@ -9,6 +9,10 @@
     <color name="LectureDialog_Bg">#E8D3D6</color>
 
     <color name="ScheduleCalendar_Bg">#CD4251</color>
-    <color name="AppBar_Color">#616161</color>
+    <color name="AppBar_Color">#CD4251</color>
     <color name="Day_Bg_Overlay">#7dffffff</color>
+
+    <color name="loginBackground">#CD4251</color>
+    <color name="text_color_white">#fff</color>
+    <color name="text_color_black">#000</color>
 </resources>

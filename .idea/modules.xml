@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/SDSU-GMAP.iml" filepath="$PROJECT_DIR$/SDSU-GMAP.iml" />
+      <module fileurl="file://$PROJECT_DIR$/SDSUSchedule_Android.iml" filepath="$PROJECT_DIR$/SDSUSchedule_Android.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

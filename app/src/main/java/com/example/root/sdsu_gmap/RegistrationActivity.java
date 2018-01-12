@@ -1,38 +1,68 @@
 package com.example.root.sdsu_gmap;
 
-import android.content.Intent;
-import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.View;
+import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
 
-public class RegistrationActivity extends AppCompatActivity {
+public class RegistrationActivity extends AppCompatActivity implements View.OnClickListener {
+
+    private EditText email;
+    private EditText redid;
+    private EditText password;
+    private EditText confirmPassword;
+    private CheckBox checkBox;
+    private Button register;
+    private TextView terms;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
+        initView();
     }
 
-    public void Register(View v)
-    {
-        final EditText email = (EditText) findViewById(R.id.emailField);
-        final EditText pwd = (EditText) findViewById(R.id.passwordField);
+    private void initView() {
+        email = (EditText) findViewById(R.id.email);
+        redid = (EditText) findViewById(R.id.redid);
+        password = (EditText) findViewById(R.id.password);
+        confirmPassword = (EditText) findViewById(R.id.confirm_password);
+        checkBox = (CheckBox) findViewById(R.id.checkBox);
+        register = (Button) findViewById(R.id.register);
+        terms = (TextView) findViewById(R.id.terms);
+
+        register.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.register:
+                if (TextUtils.isEmpty(email.getText().toString().trim()) || TextUtils.isEmpty(redid.getText().toString().trim())
+                        || TextUtils.isEmpty(password.getText().toString().trim()) || !password.getText().toString().trim().equals(confirmPassword.getText().toString().trim())
+                        || !checkBox.isChecked()) {
+                    Toast.makeText(RegistrationActivity.this, "Please enter details", Toast.LENGTH_LONG).show();
+                } else {
+                    Register();
+                }
+                break;
+        }
+    }
+
+    private void Register() {
 
         ArrayList<String> parameters = new ArrayList<>();
         parameters.add("Email=" + email.getText());
-        parameters.add("Password=" + pwd.getText());
+        parameters.add("Password=" + password.getText());
 
         NetworkCommunicator NC = new NetworkCommunicator(Constants.HOST + "registration.php", parameters, "");
         try {
@@ -40,13 +70,13 @@ public class RegistrationActivity extends AppCompatActivity {
             String ErrorCode = Response.get("ErrorCode").toString();
             String Status = Response.get("Status").toString();
 
-            if(ErrorCode.equals("0") && Status.equals("0"))
+            if (ErrorCode.equals("0") && Status.equals("0"))
                 finish();
-            else if(ErrorCode.equals("1"))
+            else if (ErrorCode.equals("1"))
                 return;//TODO
-            else if(ErrorCode.equals("2"))
+            else if (ErrorCode.equals("2"))
                 return;//TODO
-            else if(ErrorCode.equals("3"))
+            else if (ErrorCode.equals("3"))
                 return;//TODO
 
         } catch (InterruptedException | ExecutionException e) {
