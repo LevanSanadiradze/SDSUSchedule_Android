@@ -94,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
 
     private String saveCookiesOnInternalStorage(CookieManager cookieManager)
     {
-        String FILENAME = "Cookies";
+        String FILENAME = Constants.COOKIES_FILE_NAME;
         String value = "";
 
         if (cookieManager.getCookieStore().getCookies().size() > 0) {
@@ -120,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
 
     private String getCookiesOnInternalStorage()
     {
-        String FILENAME = "Cookies";
+        String FILENAME = Constants.COOKIES_FILE_NAME;
         String value = "";
 
         BufferedReader br = null;

@@ -1,8 +1,5 @@
 package com.example.root.sdsu_gmap;
 
-import android.animation.Animator;
-import android.animation.AnimatorSet;
-import android.animation.ValueAnimator;
 import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
@@ -11,11 +8,13 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.renderscript.Sampler;
 import android.support.constraint.ConstraintLayout;
+import android.support.constraint.solver.widgets.ConstraintAnchor;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
+import android.util.EventLog;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,10 +27,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
-import android.view.animation.AccelerateDecelerateInterpolator;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.view.animation.ScaleAnimation;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TableLayout;
@@ -39,7 +34,18 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.MapsInitializer;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -63,12 +69,19 @@ public class LoggedInActivity extends AppCompatActivity
     public StudentInformation studentInfo;
     private String Cookies = "";
 
+    private AlertDialog eDialog;
+    private MapView mapView;
+
+    private HashMap<String, Integer> CourseColors = new HashMap<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_logged_in);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        getEventColors();
 
         Cookies = getIntent().getStringExtra("Cookies");
         loadStudentSchedule();
@@ -90,6 +103,56 @@ public class LoggedInActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+    }
+
+    private void getEventColors()
+    {
+        String FILENAME = Constants.COURSE_COLORS_FILE_NAME;
+
+        BufferedReader br = null;
+        try {
+            br = new BufferedReader(new InputStreamReader(openFileInput(FILENAME)));
+
+            String value = null;
+            while((value = br.readLine()) != null) {
+                String[] temp = value.split(",");
+                Integer color = Integer.parseInt(temp[1]);
+                CourseColors.put(temp[0], color);
+                Constants.SCHEDULE_EVENT_COLORS.remove(color);
+            }
+            br.close();
+
+        } catch (IOException e) {
+            return;
+        }
+    }
+
+    private Integer generateEventColor(String CourseID)
+    {
+        String FILENAME = Constants.COURSE_COLORS_FILE_NAME;
+
+        if(Constants.SCHEDULE_EVENT_COLORS.size() == 0)
+            return null;
+
+        Collections.shuffle(Constants.SCHEDULE_EVENT_COLORS);
+
+        Integer color = Constants.SCHEDULE_EVENT_COLORS.remove(0);
+        String value = CourseID + "," + color + System.getProperty("line.separator");
+
+        FileOutputStream fos = null;
+        try {
+            fos = openFileOutput(FILENAME, Context.MODE_APPEND);
+
+            fos.write(value.getBytes());
+
+            CourseColors.put(CourseID, color);
+            fos.close();
+
+        }catch (IOException e) {
+            return null;
+        }
+
+        return color;
     }
 
     @Override
@@ -137,7 +200,10 @@ public class LoggedInActivity extends AppCompatActivity
             tabsContainer.getChildAt(i).setVisibility(View.GONE);
         }
 
-        if (id == R.id.Announcements_menuitem) {
+        if (id == R.id.Schedule_menuitem) {
+            tabsContainer.findViewById(R.id.Schedule_tab).setVisibility(View.VISIBLE);
+        }
+        else if (id == R.id.Announcements_menuitem) {
             tabsContainer.findViewById(R.id.Announcements_tab).setVisibility(View.VISIBLE);
         }
         else if (id == R.id.Courses_menuitem) {
@@ -350,11 +416,11 @@ public class LoggedInActivity extends AppCompatActivity
         int width = displayMetrics.widthPixels;
         int height = displayMetrics.heightPixels;
 
-        int dayWidth = (int) Math.floor(width / 4);
-        int hourHeight = (int) Math.floor(height / 12);
+        int dayWidth = (int) Math.floor((width - Constants.TIME_SIDE_WIDTH) / Constants.DAYS_SHOWN_IN_SCHEDULE_CALENDAR);
+        int hourHeight = (int) Math.floor(height / Constants.HOURS_SHOWN_IN_SCHEDULE_CALENDAR);
 
         ViewGroup.LayoutParams scheduleTimesContainerLP = scheduleTimesContainer.getLayoutParams();
-        scheduleTimesContainerLP.width = dayWidth;
+        scheduleTimesContainerLP.width = Constants.TIME_SIDE_WIDTH;
         scheduleTimesContainer.setLayoutParams(scheduleTimesContainerLP);
 
         int paddingormargintop = (int) Math.round(hourHeight / 3.0);
@@ -362,7 +428,7 @@ public class LoggedInActivity extends AppCompatActivity
         scheduleTimesContainer.setPadding(0, paddingormargintop, 0, 0);
 
         ((TabbedVerticalScrollView) findViewById(R.id.ScheduleVerticalScrollView)).setStepSize(hourHeight);
-        ((TabbedVerticalScrollView) findViewById(R.id.ScheduleVerticalScrollView)).setScrollStrength(5);
+        ((TabbedVerticalScrollView) findViewById(R.id.ScheduleVerticalScrollView)).setScrollStrength(Constants.CALENDAR_VERTICAL_SCROLLBAR_STRENGTH);
         ((TabbedVerticalScrollView) findViewById(R.id.ScheduleVerticalScrollView)).requestDisallowInterceptTouchEvent(true);
 
 
@@ -384,7 +450,7 @@ public class LoggedInActivity extends AppCompatActivity
         }
 
         ((TabbedHorizontalScrollView) findViewById(R.id.ScheduleHorizontalScrollView)).setStepSize(dayWidth);
-        ((TabbedHorizontalScrollView) findViewById(R.id.ScheduleHorizontalScrollView)).setScrollStrength(3);
+        ((TabbedHorizontalScrollView) findViewById(R.id.ScheduleHorizontalScrollView)).setScrollStrength(Constants.CALENDAR_HORIZONTAL_SCROLLBAR_STRENGTH);
         findViewById(R.id.ScheduleHorizontalScrollView).post(new Runnable() {
             @Override
             public void run() {
@@ -478,8 +544,12 @@ public class LoggedInActivity extends AppCompatActivity
             tempTableRow.addView(inflatedLayout);
 
             ViewGroup.LayoutParams LP = (inflatedLayout.findViewById(R.id.ScheduleDayContainer)).getLayoutParams();
-            LP.width = dayWidth;
+            LP.width = dayWidth - 2 * Constants.EVENT_MARGIN_ONE_SIDE;
             LP.height = paddingormargintop;
+            inflatedLayout.findViewById(R.id.ScheduleDayContainer).setLayoutParams(LP);
+
+            ConstraintLayout.LayoutParams DIC = (ConstraintLayout.LayoutParams) (inflatedLayout.findViewById(R.id.DayInfoContainer)).getLayoutParams();
+            DIC.setMargins(Constants.EVENT_MARGIN_ONE_SIDE, 0, Constants.EVENT_MARGIN_ONE_SIDE, 0);
             inflatedLayout.findViewById(R.id.ScheduleDayContainer).setLayoutParams(LP);
 
             ArrayList<Pair<Integer, Integer>> tempAL = LecturesByDay.get(DayName);
@@ -492,22 +562,30 @@ public class LoggedInActivity extends AppCompatActivity
                     View placeholderView = new View(this);
                     ((LinearLayout) inflatedLayout.findViewById(R.id.DayInfoContainer)).addView(placeholderView);
 
-                    Lecture tempLecture = studentInfo.getCourses().get(tempAL.get(e).first).getLectures().get(tempAL.get(e).second);
+                    final Lecture tempLecture = studentInfo.getCourses().get(tempAL.get(e).first).getLectures().get(tempAL.get(e).second);
 
                     ViewGroup.LayoutParams placeholderViewLP = placeholderView.getLayoutParams();
-                    placeholderViewLP.width = dayWidth;
+                    placeholderViewLP.width = dayWidth - 2 * Constants.EVENT_MARGIN_ONE_SIDE;
                     placeholderViewLP.height = (int) Math.round((((tempLecture.getStartHour() * 60.0 + tempLecture.getStartMinute()) - previousEndTime) / 60.0) * hourHeight);
                     placeholderView.setLayoutParams(placeholderViewLP);
 
-
+                    final Course tempCourse = studentInfo.getCourses().get(tempAL.get(e).first);
 
                     View eventLayout = inflater.inflate(R.layout.schedule_calendar_event, null, false);
+
+
+                    Integer EventColor = CourseColors.get(tempCourse.getScheduleID());
+                    if (EventColor == null)
+                        EventColor = generateEventColor(tempCourse.getScheduleID());
+
+                    if(EventColor != null)
+                        eventLayout.setBackgroundColor(EventColor);
 
                     eventLayout.setLongClickable(true);
                     eventLayout.setOnLongClickListener(new View.OnLongClickListener() {
                         @Override
                         public boolean onLongClick(View view) {
-                            openEventDialog();
+                            openEventDialog(tempLecture, tempCourse);
                             return true;
                         }
                     });
@@ -519,7 +597,7 @@ public class LoggedInActivity extends AppCompatActivity
                     ((LinearLayout) inflatedLayout.findViewById(R.id.DayInfoContainer)).addView(eventLayout);
 
                     ConstraintLayout.LayoutParams eventLP = (ConstraintLayout.LayoutParams) (eventLayout.findViewById(R.id.ScheduleEventContainer)).getLayoutParams();
-                    eventLP.width = dayWidth;
+                    eventLP.width = dayWidth - 2 * Constants.EVENT_MARGIN_ONE_SIDE;
                     eventLP.height = (int) Math.round((((tempLecture.getEndHour() * 60.0 + tempLecture.getEndMinute()) - (tempLecture.getStartHour() * 60.0 + tempLecture.getStartMinute())) / 60.0) * hourHeight);
                     eventLayout.findViewById(R.id.ScheduleEventContainer).setLayoutParams(eventLP);
 
@@ -527,6 +605,14 @@ public class LoggedInActivity extends AppCompatActivity
                     previousEndTime = (tempLecture.getEndHour() * 60 + tempLecture.getEndMinute());
 
                 }
+
+            View placeholderView = new View(this);
+            ((LinearLayout) inflatedLayout.findViewById(R.id.DayInfoContainer)).addView(placeholderView);
+
+            ViewGroup.LayoutParams placeholderViewLP = placeholderView.getLayoutParams();
+            placeholderViewLP.width = dayWidth - 2 * Constants.EVENT_MARGIN_ONE_SIDE;
+            placeholderViewLP.height = (int) Math.round((((Constants.SCHEDULE_END_HOUR * 60 + 60) - previousEndTime) / 60.0) * hourHeight);
+            placeholderView.setLayoutParams(placeholderViewLP);
         }
 
     }
@@ -537,28 +623,99 @@ public class LoggedInActivity extends AppCompatActivity
         return dayFormat.format(date.getTime());
     }
 
-    private void openEventDialog()
+    private void openEventDialog(final Lecture lecture, Course course)
     {
         AlertDialog.Builder edBuilder = new AlertDialog.Builder(this);
-        View edView = getLayoutInflater().inflate(R.layout.dialog_lecture, null);
+        final View edView = getLayoutInflater().inflate(R.layout.dialog_lecture, null);
+        ((TextView) edView.findViewById(R.id.CourseName_DialogTitle)).setText(course.getCourse());
+
+        final Context ctx = this;
+
+        mapView = ((MapView) edView.findViewById(R.id.Location_MapView));
+        mapView.onCreate(null);
+        mapView.onResume();
+        mapView.getMapAsync(new OnMapReadyCallback() {
+            @Override
+            public void onMapReady(final GoogleMap googleMap) {
+
+                MapsInitializer.initialize(ctx);
+
+                googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+
+                ArrayList<String> parameters = new ArrayList<>();
+                parameters.add("building=" + lecture.getBuilding());
+
+                NetworkCommunicator NC = new NetworkCommunicator(Constants.HOST + "getBuildingLocation.php", parameters, Cookies);
+                new NetworkCommunicator(Constants.HOST + "getBuildingLocation.php", parameters, Cookies) {
+                    @Override
+                    protected void onPostExecute(Pair<Object, CookieManager> data) {
+                        super.onPostExecute(data);
+
+                        if(data == null)
+                        {
+                            Toast.makeText(ctx, "Unexpected Error, Please check your internet connection.", Toast.LENGTH_LONG).show();
+                            return;
+                        }
+
+                        HashMap<String, Object> Response = (HashMap<String, Object>) data.first;
+
+                        String ErrorCode = Response.get("ErrorCode").toString();
+
+                        if(ErrorCode.equals("0") && !Response.get("Latitude").equals("") && !Response.get("Longitude").equals(""))
+                        {
+                            final double latitude = Double.parseDouble(Response.get("Latitude").toString());
+                            final double longitude = Double.parseDouble(Response.get("Longitude").toString());
+
+                            ((TextView) edView.findViewById(R.id.Location_OpenMapsBtn)).setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    openGoogleMapsApp(latitude, longitude);
+                                }
+                            });
+
+
+                            googleMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).title(lecture.getBuilding()));
+
+                            CameraPosition location = CameraPosition.builder().target(new LatLng(latitude, longitude)).zoom(16).bearing(0).tilt(0).build();
+                            googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(location));
+                        }
+                    }
+                }.execute();
+            }
+        });
 
         edBuilder.setView(edView);
-        AlertDialog eDialog = edBuilder.create();
+        eDialog = edBuilder.create();
         eDialog.show();
     }
 
-    public void expandDialogItem(View v)
+    private void openGoogleMapsApp(double latitude, double longitude)
     {
-        final View body = v.findViewById(R.id.body);
-
-        if(body.getVisibility() == View.GONE)
-        {
-            body.setVisibility(View.VISIBLE);
-        }
-        else
-        {
-            body.setVisibility(View.GONE);
-        }
+        String uri = String.format(Locale.ENGLISH, "geo:%f,%f", latitude, longitude);
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+        startActivity(intent);
     }
 
+    public void closeEventDialog(View v)
+    {
+        eDialog.cancel();
+    }
+
+    public void expand_Notifications_ERL(View v)
+    {
+        View body = ((View) v.getParent()).findViewById(R.id.Notifications_ERL);
+        body.setVisibility(body.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
+    }
+
+    public void expand_Tasks_ERL(View v)
+    {
+        View body = ((View) v.getParent()).findViewById(R.id.Tasks_ERL);
+        body.setVisibility(body.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
+    }
+
+    public void expand_Location_ERL(View v)
+    {
+        View body = ((View) v.getParent()).findViewById(R.id.Location_ECL);
+        body.setVisibility(body.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
+    }
 }

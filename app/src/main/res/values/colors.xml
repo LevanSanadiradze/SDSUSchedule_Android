@@ -2,5 +2,13 @@
 <resources>
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorAccent">#ff4081</color>
+
+    <color name="LectureDialog_Title">#F2473C</color>
+    <color name="LectureDialog_CloseBtn">#3bffffff</color>
+    <color name="LectureDialog_Bg">#E8D3D6</color>
+
+    <color name="ScheduleCalendar_Bg">#CD4251</color>
+    <color name="AppBar_Color">#616161</color>
+    <color name="Day_Bg_Overlay">#7dffffff</color>
 </resources>
