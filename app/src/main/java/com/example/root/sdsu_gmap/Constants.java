@@ -28,7 +28,7 @@ public class Constants {
 
     public static final int EVENT_MARGIN_ONE_SIDE = 10; //in px
 
-    public static final int TIME_SIDE_WIDTH = 250; //in px
+    public static final int TIME_SIDE_WIDTH = 70; //in dp
 
     public static final int DAYS_SHOWN_IN_SCHEDULE_CALENDAR = 3;
     public static final int HOURS_SHOWN_IN_SCHEDULE_CALENDAR = 12;

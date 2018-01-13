@@ -10,9 +10,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -21,7 +19,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.util.Pair;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +29,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.root.sdsu_gmap.fragments.ClubsFragment;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -68,6 +66,7 @@ public class LoggedInActivity extends AppCompatActivity
 
     private AlertDialog eDialog;
     private MapView mapView;
+    private NavigationView navigationView;
 
     private HashMap<String, Integer> CourseColors = new HashMap<>();
 
@@ -98,7 +97,7 @@ public class LoggedInActivity extends AppCompatActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
     }
 
@@ -205,7 +204,12 @@ public class LoggedInActivity extends AppCompatActivity
         } else if (id == R.id.Events_menuitem) {
             tabsContainer.findViewById(R.id.Events_tab).setVisibility(View.VISIBLE);
         } else if (id == R.id.Clubs_menuitem) {
-            tabsContainer.findViewById(R.id.Clubs_tab).setVisibility(View.VISIBLE);
+//            tabsContainer.findViewById(R.id.Clubs_tab).setVisibility(View.VISIBLE);
+            ClubsFragment fragment = new ClubsFragment();
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.tabscontainer, fragment)
+                    .addToBackStack(null)
+                    .commit();
         } else if (id == R.id.Contact_menuitem) {
             tabsContainer.findViewById(R.id.Contact_tab).setVisibility(View.VISIBLE);
         } else if (id == R.id.Settings_menuitem) {
@@ -365,6 +369,11 @@ public class LoggedInActivity extends AppCompatActivity
     }
 
     private void AddScheduleInfoToScrollViews() {
+
+
+        final float scale = LoggedInActivity.this.getResources().getDisplayMetrics().density;
+        int pixels = (int) (Constants.TIME_SIDE_WIDTH * scale + 0.5f);
+
         Date curTime = Calendar.getInstance().getTime();
 
         LayoutInflater inflater = LayoutInflater.from(this);
@@ -385,7 +394,7 @@ public class LoggedInActivity extends AppCompatActivity
         int hourHeight = (int) Math.floor(height / Constants.HOURS_SHOWN_IN_SCHEDULE_CALENDAR);
 
         ViewGroup.LayoutParams scheduleTimesContainerLP = scheduleTimesContainer.getLayoutParams();
-        scheduleTimesContainerLP.width = Constants.TIME_SIDE_WIDTH;
+        scheduleTimesContainerLP.width = pixels;
         scheduleTimesContainer.setLayoutParams(scheduleTimesContainerLP);
 
         int paddingormargintop = (int) Math.round(hourHeight / 3.0);
@@ -408,7 +417,7 @@ public class LoggedInActivity extends AppCompatActivity
             scheduleTimesContainer.addView(inflatedLayout);
 
             ViewGroup.LayoutParams LP = (inflatedLayout.findViewById(R.id.ScheduleTimeContainer)).getLayoutParams();
-            LP.width = dayWidth;
+            LP.width = pixels;
             LP.height = hourHeight;
             inflatedLayout.findViewById(R.id.ScheduleTimeContainer).setLayoutParams(LP);
         }
