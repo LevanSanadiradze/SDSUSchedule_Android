@@ -1,6 +1,7 @@
 package com.example.root.sdsu_gmap;
 
 import android.app.AlertDialog;
+import android.app.FragmentManager;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -29,7 +30,9 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.root.sdsu_gmap.fragments.AnnouncementsFragment;
 import com.example.root.sdsu_gmap.fragments.ClubsFragment;
+import com.example.root.sdsu_gmap.fragments.CoursesFragment;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -67,6 +70,7 @@ public class LoggedInActivity extends AppCompatActivity
     private AlertDialog eDialog;
     private MapView mapView;
     private NavigationView navigationView;
+    private FragmentManager fragmentManager;
 
     private HashMap<String, Integer> CourseColors = new HashMap<>();
 
@@ -81,6 +85,8 @@ public class LoggedInActivity extends AppCompatActivity
 
         Cookies = App.get().getCookies();
         loadStudentSchedule();
+
+        fragmentManager = getFragmentManager();
 
         /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -155,7 +161,18 @@ public class LoggedInActivity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+//todo change to schedule fragment
+            if (fragmentManager.findFragmentByTag("ANNOUNCEMENT")!=null&&fragmentManager.findFragmentByTag("ANNOUNCEMENT").isVisible())
+                super.onBackPressed();
+            else{
+                AnnouncementsFragment fragment = new AnnouncementsFragment();
+                fragmentManager.beginTransaction()
+                        .replace(R.id.tabscontainer, fragment, "ANNOUNCEMENT")
+//                    .addToBackStack("ANNOUNCEMENT")
+                        .commit();
+                navigationView.getMenu().getItem(0).setChecked(true);
+            }
+
         }
     }
 
@@ -196,9 +213,17 @@ public class LoggedInActivity extends AppCompatActivity
         if (id == R.id.Schedule_menuitem) {
             tabsContainer.findViewById(R.id.Schedule_tab).setVisibility(View.VISIBLE);
         } else if (id == R.id.Announcements_menuitem) {
-            tabsContainer.findViewById(R.id.Announcements_tab).setVisibility(View.VISIBLE);
+//            tabsContainer.findViewById(R.id.Announcements_tab).setVisibility(View.VISIBLE);
+            AnnouncementsFragment fragment = new AnnouncementsFragment();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.tabscontainer, fragment, "ANNOUNCEMENT")//todo delete tag
+                    .commit();
         } else if (id == R.id.Courses_menuitem) {
-            tabsContainer.findViewById(R.id.Courses_tab).setVisibility(View.VISIBLE);
+//            tabsContainer.findViewById(R.id.Courses_tab).setVisibility(View.VISIBLE);
+            CoursesFragment fragment = new CoursesFragment();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.tabscontainer, fragment)
+                    .commit();
         } else if (id == R.id.Tasks_menuitem) {
             tabsContainer.findViewById(R.id.Tasks_tab).setVisibility(View.VISIBLE);
         } else if (id == R.id.Events_menuitem) {
@@ -206,9 +231,8 @@ public class LoggedInActivity extends AppCompatActivity
         } else if (id == R.id.Clubs_menuitem) {
 //            tabsContainer.findViewById(R.id.Clubs_tab).setVisibility(View.VISIBLE);
             ClubsFragment fragment = new ClubsFragment();
-            getSupportFragmentManager().beginTransaction()
+            fragmentManager.beginTransaction()
                     .replace(R.id.tabscontainer, fragment)
-                    .addToBackStack(null)
                     .commit();
         } else if (id == R.id.Contact_menuitem) {
             tabsContainer.findViewById(R.id.Contact_tab).setVisibility(View.VISIBLE);

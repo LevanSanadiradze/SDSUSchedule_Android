@@ -47,7 +47,7 @@
 
         <include
             android:id="@+id/Announcements_tab"
-            layout="@layout/tab_announcements"
+            layout="@layout/fragment_announcements"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:visibility="gone" />
