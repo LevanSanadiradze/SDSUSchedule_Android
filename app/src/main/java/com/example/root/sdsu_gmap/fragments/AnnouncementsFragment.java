@@ -29,6 +29,15 @@ public class AnnouncementsFragment extends Fragment {
         listView=(ExpandableListView)view.findViewById(R.id.listview);
         listView.setAdapter(adapter);
 
+        listView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
+            @Override
+            public boolean onGroupClick(ExpandableListView expandableListView, View view, int i, long l) {
+
+                //todo change background color
+
+                return false;
+            }
+        });
         return view;
     }
 }

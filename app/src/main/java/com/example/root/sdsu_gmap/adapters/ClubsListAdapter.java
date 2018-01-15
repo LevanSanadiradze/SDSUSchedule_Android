@@ -44,6 +44,14 @@ public class ClubsListAdapter extends ArrayAdapter<ClubsAnnouncement> {
 
     public void updateData(List<ClubsAnnouncement> data) {
         this.data = data;
+        notifyDataSetChanged();
+    }
+
+    @Override
+    public int getCount() {
+        if (data == null)
+            return 0;
+        return data.size();
     }
 
     @NonNull
@@ -67,6 +75,7 @@ public class ClubsListAdapter extends ArrayAdapter<ClubsAnnouncement> {
         }
 
         final ClubsAnnouncement anouncment = data.get(position);
+
 
         holder.text.setText(anouncment.getText());
         holder.time.setText(anouncment.getTime());

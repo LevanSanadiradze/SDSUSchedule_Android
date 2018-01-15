@@ -10,36 +10,26 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.example.root.sdsu_gmap.R;
-import com.example.root.sdsu_gmap.models.CoursesData;
+import com.example.root.sdsu_gmap.models.TasksData;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by giorgi on 1/13/18.
+ * Created by giorgi on 1/15/18.
  */
 
-public class CoursesListAdapter extends ArrayAdapter<CoursesData> {
-
+public class TasksListAdapter extends ArrayAdapter<TasksData> {
     private Context context;
     private LayoutInflater inflater;
-    private List<CoursesData> data;
+    private List<TasksData> data;
 
-    public CoursesListAdapter(@NonNull Context context) {
-        super(context, R.layout.fragment_courses);
+    public TasksListAdapter(@NonNull Context context) {
+        super(context, R.layout.tasks_list_row);
+
         this.context = context;
         data = new ArrayList<>();
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-    }
-
-    @Nullable
-    @Override
-    public CoursesData getItem(int position) {
-        return data.get(position);
-    }
-
-    public void updateData(List<CoursesData> data) {
-        this.data = data;
     }
 
     @Override
@@ -49,37 +39,42 @@ public class CoursesListAdapter extends ArrayAdapter<CoursesData> {
         return data.size();
     }
 
+    @Nullable
+    @Override
+    public TasksData getItem(int position) {
+        return data.get(position);
+    }
+
+    public void updateData(List<TasksData> data) {
+        this.data = data;
+    }
+
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         View view = convertView;
-
         Holder holder;
-
         if (view == null) {
-            view = inflater.inflate(R.layout.clubs_list_row, parent, false);
+            view = inflater.inflate(R.layout.tasks_list_row, parent, false);
             holder = new Holder();
 
-            holder.name = view.findViewById(R.id.name);
-            holder.professor = view.findViewById(R.id.professor);
-            holder.schedule = view.findViewById(R.id.schedule);
+            holder.title = (TextView) view.findViewById(R.id.title);
+            holder.details = (TextView) view.findViewById(R.id.details);
+
             view.setTag(holder);
         } else {
             holder = (Holder) view.getTag();
         }
 
-        final CoursesData course = data.get(position);
-
-        holder.name.setText(course.getName());
-        holder.schedule.setText(course.getSchedule());
-        holder.professor.setText(course.getProfessor());
+        final TasksData data = getItem(position);
+        holder.details.setText(data.getDetails());
+        holder.title.setText(data.getTitle());
 
         return view;
     }
 
     class Holder {
-        TextView name;
-        TextView professor;
-        TextView schedule;
+        TextView title;
+        TextView details;
     }
 }

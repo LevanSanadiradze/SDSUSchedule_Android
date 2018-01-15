@@ -17,7 +17,6 @@ import java.util.concurrent.ExecutionException;
 public class RegistrationActivity extends AppCompatActivity implements View.OnClickListener {
 
     private EditText email;
-    private EditText redid;
     private EditText password;
     private EditText confirmPassword;
     private CheckBox checkBox;
@@ -33,7 +32,6 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
 
     private void initView() {
         email = (EditText) findViewById(R.id.email);
-        redid = (EditText) findViewById(R.id.redid);
         password = (EditText) findViewById(R.id.password);
         confirmPassword = (EditText) findViewById(R.id.confirm_password);
         checkBox = (CheckBox) findViewById(R.id.checkBox);
@@ -47,8 +45,8 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.register:
-                if (TextUtils.isEmpty(email.getText().toString().trim()) || TextUtils.isEmpty(redid.getText().toString().trim())
-                        || TextUtils.isEmpty(password.getText().toString().trim()) || !password.getText().toString().trim().equals(confirmPassword.getText().toString().trim())
+                if (TextUtils.isEmpty(email.getText().toString().trim()) || TextUtils.isEmpty(password.getText().toString().trim())
+                        || !password.getText().toString().trim().equals(confirmPassword.getText().toString().trim())
                         || !checkBox.isChecked()) {
                     Toast.makeText(RegistrationActivity.this, "Please enter details", Toast.LENGTH_LONG).show();
                 } else {

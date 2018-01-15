@@ -15,7 +15,6 @@ import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -31,11 +30,12 @@ public class NetworkCommunicator extends AsyncTask<Void, Void, Pair<Object, Cook
     private String urlParameters = "";
     private String Cookies = "";
 
-    NetworkCommunicator(String url, ArrayList<String> parameters, String Cookies) {
+    public NetworkCommunicator(String url, ArrayList<String> parameters, String Cookies) {
         this.url = url;
         this.Cookies = Cookies;
 
-        urlParameters = TextUtils.join("&", parameters);
+        if (!parameters.isEmpty())
+            urlParameters = TextUtils.join("&", parameters);
     }
 
     @Override
@@ -68,8 +68,7 @@ public class NetworkCommunicator extends AsyncTask<Void, Void, Pair<Object, Cook
             StringBuilder content = new StringBuilder();
 
             String line;
-            while((line = in.readLine()) != null)
-            {
+            while ((line = in.readLine()) != null) {
                 content.append(line);
             }
 
@@ -83,13 +82,11 @@ public class NetworkCommunicator extends AsyncTask<Void, Void, Pair<Object, Cook
                 }
             }
 
-            return new Pair<>((Object)JSONParser.Parse(content.toString()), cookieManager);
+            return new Pair<>((Object) JSONParser.Parse(content.toString()), cookieManager);
 
-        }
-        catch (SocketTimeoutException e) {
+        } catch (SocketTimeoutException e) {
             return null;
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
 

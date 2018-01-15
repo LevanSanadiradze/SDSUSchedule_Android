@@ -33,6 +33,7 @@ import android.widget.Toast;
 import com.example.root.sdsu_gmap.fragments.AnnouncementsFragment;
 import com.example.root.sdsu_gmap.fragments.ClubsFragment;
 import com.example.root.sdsu_gmap.fragments.CoursesFragment;
+import com.example.root.sdsu_gmap.fragments.TasksFragment;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -162,9 +163,9 @@ public class LoggedInActivity extends AppCompatActivity
             drawer.closeDrawer(GravityCompat.START);
         } else {
 //todo change to schedule fragment
-            if (fragmentManager.findFragmentByTag("ANNOUNCEMENT")!=null&&fragmentManager.findFragmentByTag("ANNOUNCEMENT").isVisible())
+            if (fragmentManager.findFragmentByTag("ANNOUNCEMENT") != null && fragmentManager.findFragmentByTag("ANNOUNCEMENT").isVisible())
                 super.onBackPressed();
-            else{
+            else {
                 AnnouncementsFragment fragment = new AnnouncementsFragment();
                 fragmentManager.beginTransaction()
                         .replace(R.id.tabscontainer, fragment, "ANNOUNCEMENT")
@@ -225,7 +226,11 @@ public class LoggedInActivity extends AppCompatActivity
                     .replace(R.id.tabscontainer, fragment)
                     .commit();
         } else if (id == R.id.Tasks_menuitem) {
-            tabsContainer.findViewById(R.id.Tasks_tab).setVisibility(View.VISIBLE);
+//            tabsContainer.findViewById(R.id.Tasks_tab).setVisibility(View.VISIBLE);
+            TasksFragment fragment = new TasksFragment();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.tabscontainer, fragment)
+                    .commit();
         } else if (id == R.id.Events_menuitem) {
             tabsContainer.findViewById(R.id.Events_tab).setVisibility(View.VISIBLE);
         } else if (id == R.id.Clubs_menuitem) {
@@ -388,8 +393,6 @@ public class LoggedInActivity extends AppCompatActivity
         StudentName += !studentInfo.getMiddleName().equals("") ? studentInfo.getMiddleName() + " " : "";
         StudentName += studentInfo.getLastName();
         StudentNameTextView.setText(StudentName);
-
-
     }
 
     private void AddScheduleInfoToScrollViews() {
