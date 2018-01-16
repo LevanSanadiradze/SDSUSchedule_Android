@@ -60,10 +60,41 @@ public class ClubsFragment extends Fragment {
 
                 HashMap<String, Object> Response = (HashMap<String, Object>) data.first;
 
-                ClubsAnnouncement announcement = new ClubsAnnouncement(Response.get("name").toString(), Response.get("time").toString(), Response.get("text").toString(), Response.get("color").toString());
-                List<ClubsAnnouncement> llist=new ArrayList<>();
-                llist.add(announcement);
-                adapter.updateData(llist);
+                String ErrorCode = Response.get("ErrorCode").toString();
+                if (ErrorCode.equals("0")) {
+                    try {
+                        HashMap<String, Object> map = (HashMap<String, Object>) Response.get("ClubAnnouncements");
+
+                        List<ClubsAnnouncement> list = new ArrayList<>();
+                        for (int i = 0; i < map.size(); i++) {
+                            HashMap<String, Object> jsonData = (HashMap<String, Object>) map.get("JSONArray" + i);
+                            ClubsAnnouncement task = new ClubsAnnouncement(jsonData.get("clubannouncement_id").toString(), jsonData.get("myvoteid").toString(), jsonData.get("seen").toString(), jsonData.get("name").toString(), jsonData.get("time").toString(), jsonData.get("text").toString(), jsonData.get("color").toString());
+
+                            List<String> pollData = new ArrayList<>();
+                            HashMap<String, Object> pollDataMap = (HashMap<String, Object>) jsonData.get("polldata");
+                            for (int j = 0; j < pollDataMap.size(); j++) {
+                                pollData.add(pollDataMap.get("" + (j + 1)).toString());
+                            }
+
+                            List<Integer> pollAnswers = new ArrayList<>();
+                            HashMap<String, Object> pollAnswersMap = (HashMap<String, Object>) jsonData.get("pollanswers");
+                            for (int j = 0; j < pollAnswersMap.size(); j++) {
+                                pollAnswers.add(Integer.parseInt(pollAnswersMap.get("" + (j + 1)).toString()));
+                            }
+
+                            task.setPollAnswers(pollAnswers);
+                            task.setPollData(pollData);
+
+                            list.add(task);
+                        }
+
+                        adapter.updateData(list);
+                    } catch (NullPointerException e) {
+                        Toast.makeText(getActivity(), "Error occured", Toast.LENGTH_LONG).show();
+                    }
+                } else {
+                    Toast.makeText(getActivity(), "Error occured", Toast.LENGTH_LONG).show();
+                }
             }
         }.execute();
     }

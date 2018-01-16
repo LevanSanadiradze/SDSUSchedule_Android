@@ -34,6 +34,8 @@ import com.example.root.sdsu_gmap.fragments.AnnouncementsFragment;
 import com.example.root.sdsu_gmap.fragments.ClubsFragment;
 import com.example.root.sdsu_gmap.fragments.CoursesFragment;
 import com.example.root.sdsu_gmap.fragments.TasksFragment;
+import com.example.root.sdsu_gmap.models.Course;
+import com.example.root.sdsu_gmap.models.Lecture;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -638,7 +640,6 @@ public class LoggedInActivity extends AppCompatActivity
                 ArrayList<String> parameters = new ArrayList<>();
                 parameters.add("building=" + lecture.getBuilding());
 
-                NetworkCommunicator NC = new NetworkCommunicator(Constants.HOST + "getBuildingLocation.php", parameters, Cookies);
                 new NetworkCommunicator(Constants.HOST + "getBuildingLocation.php", parameters, Cookies) {
                     @Override
                     protected void onPostExecute(Pair<Object, CookieManager> data) {

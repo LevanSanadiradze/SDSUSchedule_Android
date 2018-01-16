@@ -10,7 +10,8 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.example.root.sdsu_gmap.R;
-import com.example.root.sdsu_gmap.models.CoursesData;
+import com.example.root.sdsu_gmap.models.Course;
+import com.example.root.sdsu_gmap.models.Lecture;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,11 +20,11 @@ import java.util.List;
  * Created by giorgi on 1/13/18.
  */
 
-public class CoursesListAdapter extends ArrayAdapter<CoursesData> {
+public class CoursesListAdapter extends ArrayAdapter<Course> {
 
     private Context context;
     private LayoutInflater inflater;
-    private List<CoursesData> data;
+    private List<Course> data;
 
     public CoursesListAdapter(@NonNull Context context) {
         super(context, R.layout.fragment_courses);
@@ -34,12 +35,13 @@ public class CoursesListAdapter extends ArrayAdapter<CoursesData> {
 
     @Nullable
     @Override
-    public CoursesData getItem(int position) {
+    public Course getItem(int position) {
         return data.get(position);
     }
 
-    public void updateData(List<CoursesData> data) {
+    public void updateData(List<Course> data) {
         this.data = data;
+        notifyDataSetChanged();
     }
 
     @Override
@@ -57,7 +59,7 @@ public class CoursesListAdapter extends ArrayAdapter<CoursesData> {
         Holder holder;
 
         if (view == null) {
-            view = inflater.inflate(R.layout.clubs_list_row, parent, false);
+            view = inflater.inflate(R.layout.courses_list_row, parent, false);
             holder = new Holder();
 
             holder.name = view.findViewById(R.id.name);
@@ -68,11 +70,17 @@ public class CoursesListAdapter extends ArrayAdapter<CoursesData> {
             holder = (Holder) view.getTag();
         }
 
-        final CoursesData course = data.get(position);
+        final Course course = data.get(position);
 
-        holder.name.setText(course.getName());
-        holder.schedule.setText(course.getSchedule());
-        holder.professor.setText(course.getProfessor());
+        String schedule = "";
+        for (int i = 0; i < course.getLectures().size(); i++) {
+            Lecture lecture = course.getLectures().get(i);
+            schedule = schedule + lecture.getStartHour() + ":" + lecture.getStartMinute() + "-" + lecture.getEndHour() + ":" + lecture.getEndMinute() +
+                    " " + getDay(lecture.getDay()) + "\n";
+        }
+        holder.name.setText(course.getCourse());
+        holder.schedule.setText(schedule);
+        holder.professor.setText(course.getInstructor());
 
         return view;
     }
@@ -81,5 +89,24 @@ public class CoursesListAdapter extends ArrayAdapter<CoursesData> {
         TextView name;
         TextView professor;
         TextView schedule;
+    }
+
+    private String getDay(String day) {
+        switch (day) {
+            case "M":
+                return "Monday";
+            case "T":
+                return "Tuesday";
+            case "W":
+                return "Wednesday";
+            case "Th":
+                return "Thursday";
+            case "F":
+                return "Friday";
+            case "S":
+                return "Saturday";
+            default:
+                return "";
+        }
     }
 }

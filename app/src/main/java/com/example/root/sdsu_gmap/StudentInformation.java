@@ -1,5 +1,7 @@
 package com.example.root.sdsu_gmap;
 
+import com.example.root.sdsu_gmap.models.Course;
+
 import java.util.List;
 
 /**

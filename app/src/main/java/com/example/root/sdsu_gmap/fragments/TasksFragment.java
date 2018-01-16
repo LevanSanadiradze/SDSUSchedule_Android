@@ -1,24 +1,40 @@
 package com.example.root.sdsu_gmap.fragments;
 
 import android.app.Fragment;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Toast;
 
+import com.example.root.sdsu_gmap.App;
+import com.example.root.sdsu_gmap.Constants;
+import com.example.root.sdsu_gmap.CustomDialog;
+import com.example.root.sdsu_gmap.NetworkCommunicator;
 import com.example.root.sdsu_gmap.R;
 import com.example.root.sdsu_gmap.adapters.TasksListAdapter;
+import com.example.root.sdsu_gmap.models.TasksData;
+
+import java.net.CookieManager;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by giorgi on 1/15/18.
  */
 
-public class TasksFragment extends Fragment {
+public class TasksFragment extends Fragment implements View.OnClickListener {
 
     private ListView listView;
     private TasksListAdapter adapter;
+    private ImageView add;
 
     @Nullable
     @Override
@@ -28,8 +44,63 @@ public class TasksFragment extends Fragment {
         adapter = new TasksListAdapter(getActivity());
 
         listView = (ListView) view.findViewById(R.id.listview);
+        add = (ImageView) view.findViewById(R.id.add);
+
+        add.setOnClickListener(this);
         listView.setAdapter(adapter);
 
+        getData();
+
         return view;
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.add:
+                addTask();
+                break;
+        }
+    }
+
+    private void addTask() {
+        CustomDialog dialog = new CustomDialog(getActivity());
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.show();
+    }
+
+    private void getData() {
+        new NetworkCommunicator(Constants.HOST + "getTasks.php", new ArrayList<String>(), App.get().getCookies()) {
+            @Override
+            protected void onPostExecute(Pair<Object, CookieManager> data) {
+                super.onPostExecute(data);
+
+                if (data == null) {
+                    Toast.makeText(getActivity(), "Unexpected Error, Please check your internet connection.", Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+                HashMap<String, Object> Response = (HashMap<String, Object>) data.first;
+
+                String ErrorCode = Response.get("ErrorCode").toString();
+                if (ErrorCode.equals("0")) {
+                    try {
+                        HashMap<String, Object> map = (HashMap<String, Object>) Response.get("Tasks");
+                        List<TasksData> list = new ArrayList<>();
+                        for (int i = 0; i < map.size(); i++) {
+                            HashMap<String, Object> jsonData = (HashMap<String, Object>) map.get("JSONArray" + i);
+                            TasksData task = new TasksData(jsonData.get("Taskid").toString(), jsonData.get("time").toString(), jsonData.get("title").toString(), jsonData.get("text").toString());
+                            list.add(task);
+                        }
+
+                        adapter.updateData(list);
+                    } catch (NullPointerException e) {
+                        Toast.makeText(getActivity(), "Error occured", Toast.LENGTH_LONG).show();
+                    }
+                } else {
+                    Toast.makeText(getActivity(), "Error occured", Toast.LENGTH_LONG).show();
+                }
+            }
+        }.execute();
     }
 }

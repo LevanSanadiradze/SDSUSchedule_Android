@@ -5,15 +5,35 @@ package com.example.root.sdsu_gmap.models;
  */
 
 public class TasksData {
+    private int id;
+    private String time;
     private String title;
     private String details;
 
     public TasksData() {
     }
 
-    public TasksData(String title, String details) {
+    public TasksData(String id, String time, String title, String details) {
+        this.id = Integer.parseInt(id);
+        this.time = time;
         this.title = title;
         this.details = details;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
     }
 
     public String getTitle() {

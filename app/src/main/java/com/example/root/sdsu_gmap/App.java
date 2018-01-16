@@ -2,6 +2,10 @@ package com.example.root.sdsu_gmap;
 
 import android.app.Application;
 
+import com.example.root.sdsu_gmap.models.Course;
+
+import java.util.List;
+
 /**
  * Created by giorgi on 1/12/18.
  */
@@ -9,6 +13,7 @@ import android.app.Application;
 public class App extends Application {
     private static App instance;
     private String cookies;
+    private List<Course> courses;
 
     @Override
     public void onCreate() {
@@ -27,5 +32,13 @@ public class App extends Application {
 
     public void setCookies(String cookies) {
         this.cookies = cookies;
+    }
+
+    public List<Course> getCourses() {
+        return courses;
+    }
+
+    public void setCourses(List<Course> courses) {
+        this.courses = courses;
     }
 }

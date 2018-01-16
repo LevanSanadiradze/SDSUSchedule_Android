@@ -1,4 +1,4 @@
-package com.example.root.sdsu_gmap;
+package com.example.root.sdsu_gmap.models;
 
 import java.util.List;
 

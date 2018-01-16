@@ -1,4 +1,4 @@
-package com.example.root.sdsu_gmap;
+package com.example.root.sdsu_gmap.models;
 
 /**
  * Created by root on 12/12/17.
@@ -16,8 +16,7 @@ public class Lecture {
     private String Building = "";
     private String Room = "";
 
-    public Lecture(String Format, String Day, String StartTime, String EndTime, String Partner, String Building, String Room)
-    {
+    public Lecture(String Format, String Day, String StartTime, String EndTime, String Partner, String Building, String Room) {
         this.Format = Format;
         this.Day = Day;
 

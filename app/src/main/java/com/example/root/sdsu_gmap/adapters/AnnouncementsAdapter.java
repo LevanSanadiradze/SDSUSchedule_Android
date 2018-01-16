@@ -31,6 +31,7 @@ public class AnnouncementsAdapter extends BaseExpandableListAdapter {
 
     public void updateData(List<AnnouncementsData> data) {
         this.data = data;
+        notifyDataSetChanged();
     }
 
     @Override

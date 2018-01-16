@@ -5,17 +5,29 @@ package com.example.root.sdsu_gmap.models;
  */
 
 public class AnnouncementsData {
+    private int id;
     private String date;
     private String title;
     private String text;
+    private boolean seen;
 
     public AnnouncementsData() {
     }
 
-    public AnnouncementsData(String date, String title, String text) {
+    public AnnouncementsData(String date, String title, String text, String seen, String id) {
         this.date = date;
         this.title = title;
         this.text = text;
+        this.id = Integer.parseInt(id);
+        this.seen = Integer.parseInt(seen) == 1;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getDate() {
@@ -40,5 +52,13 @@ public class AnnouncementsData {
 
     public void setText(String text) {
         this.text = text;
+    }
+
+    public boolean isSeen() {
+        return seen;
+    }
+
+    public void setSeen(boolean seen) {
+        this.seen = seen;
     }
 }

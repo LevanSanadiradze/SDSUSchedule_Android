@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+import com.example.root.sdsu_gmap.App;
 import com.example.root.sdsu_gmap.R;
 import com.example.root.sdsu_gmap.adapters.CoursesListAdapter;
 
@@ -29,6 +30,8 @@ public class CoursesFragment extends Fragment {
 
         listView = (ListView) view.findViewById(R.id.listview);
         listView.setAdapter(adapter);
+
+        adapter.updateData(App.get().getCourses());
 
         return view;
     }
