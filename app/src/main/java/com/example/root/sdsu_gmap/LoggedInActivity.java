@@ -23,13 +23,16 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.root.sdsu_gmap.adapters.MenuAdapter;
 import com.example.root.sdsu_gmap.fragments.AnnouncementsFragment;
 import com.example.root.sdsu_gmap.fragments.ClubsFragment;
 import com.example.root.sdsu_gmap.fragments.ContactsFragment;
@@ -76,6 +79,7 @@ public class LoggedInActivity extends AppCompatActivity
     private MapView mapView;
     private NavigationView navigationView;
     private FragmentManager fragmentManager;
+    private ListView listView;
 
     private HashMap<String, Integer> CourseColors = new HashMap<>();
 
@@ -175,7 +179,7 @@ public class LoggedInActivity extends AppCompatActivity
                         .replace(R.id.tabscontainer, fragment, "ANNOUNCEMENT")
 //                    .addToBackStack("ANNOUNCEMENT")
                         .commit();
-                navigationView.getMenu().getItem(0).setChecked(true);
+//                navigationView.getMenu().getItem(0).setChecked(true);
             }
 
         }
@@ -395,16 +399,84 @@ public class LoggedInActivity extends AppCompatActivity
         AddScheduleInfoToScrollViews();
 
         NavigationView navigationView = findViewById(R.id.nav_view);
+        final RelativeLayout tabsContainer = findViewById(R.id.tabscontainer);
+        final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        View view = findViewById(R.id.settings_menu);
 
-        navigationView.getMenu().getItem(0).setChecked(true);
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SettingsFragment fragment = new SettingsFragment();
+                fragmentManager.beginTransaction()
+                        .replace(R.id.tabscontainer, fragment)
+                        .commit();
 
-        View headerView = navigationView.getHeaderView(0);
+                drawer.closeDrawer(GravityCompat.START);
+            }
+        });
 
-        TextView StudentNameTextView = headerView.findViewById(R.id.StudentNameTextView);
+        listView = (ListView) findViewById(R.id.lst_menu_items);
+        final MenuAdapter adapter = new MenuAdapter(LoggedInActivity.this);
+        listView.setAdapter(adapter);
+
+        TextView StudentNameTextView = findViewById(R.id.StudentNameTextView);
         String StudentName = studentInfo.getFirstName() + " ";
         StudentName += !studentInfo.getMiddleName().equals("") ? studentInfo.getMiddleName() + " " : "";
         StudentName += studentInfo.getLastName();
         StudentNameTextView.setText(StudentName);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                com.example.root.sdsu_gmap.models.MenuItem item = adapter.getItem(position);
+
+                String id = item.getTitle();
+
+
+                for (int i = 0; i < tabsContainer.getChildCount(); i++) {
+                    tabsContainer.getChildAt(i).setVisibility(View.GONE);
+                }
+
+                if (id.equals("Schedule")) {
+                    tabsContainer.findViewById(R.id.Schedule_tab).setVisibility(View.VISIBLE);
+                } else if (id.equals("Announcements")) {
+//            tabsContainer.findViewById(R.id.Announcements_tab).setVisibility(View.VISIBLE);
+                    AnnouncementsFragment fragment = new AnnouncementsFragment();
+                    fragmentManager.beginTransaction()
+                            .replace(R.id.tabscontainer, fragment, "ANNOUNCEMENT")//todo delete tag
+                            .commit();
+                } else if (id.equals("Courses")) {
+//            tabsContainer.findViewById(R.id.Courses_tab).setVisibility(View.VISIBLE);
+                    CoursesFragment fragment = new CoursesFragment();
+                    fragmentManager.beginTransaction()
+                            .replace(R.id.tabscontainer, fragment)
+                            .commit();
+                } else if (id.equals("Tasks")) {
+//            tabsContainer.findViewById(R.id.Tasks_tab).setVisibility(View.VISIBLE);
+                    TasksFragment fragment = new TasksFragment();
+                    fragmentManager.beginTransaction()
+                            .replace(R.id.tabscontainer, fragment)
+                            .commit();
+                } else if (id.equals("Events")) {
+                    tabsContainer.findViewById(R.id.Events_tab).setVisibility(View.VISIBLE);
+                } else if (id.equals("Clubs")) {
+//            tabsContainer.findViewById(R.id.Clubs_tab).setVisibility(View.VISIBLE);
+                    ClubsFragment fragment = new ClubsFragment();
+                    fragmentManager.beginTransaction()
+                            .replace(R.id.tabscontainer, fragment)
+                            .commit();
+                } else if (id.equals("Contact")) {
+//            tabsContainer.findViewById(R.id.Contact_tab).setVisibility(View.VISIBLE);
+                    ContactsFragment fragment = new ContactsFragment();
+                    fragmentManager.beginTransaction()
+                            .replace(R.id.tabscontainer, fragment)
+                            .commit();
+                }
+
+
+                drawer.closeDrawer(GravityCompat.START);
+            }
+        });
     }
 
     private void AddScheduleInfoToScrollViews() {

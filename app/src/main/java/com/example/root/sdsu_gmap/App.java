@@ -2,6 +2,7 @@ package com.example.root.sdsu_gmap;
 
 import android.app.Application;
 
+import com.example.root.sdsu_gmap.font.FontsOverride;
 import com.example.root.sdsu_gmap.models.Course;
 
 import java.util.List;
@@ -13,6 +14,7 @@ import java.util.List;
 public class App extends Application {
     private static App instance;
     private String cookies;
+    private FontsOverride fonts;
     private List<Course> courses;
 
     @Override
@@ -20,6 +22,9 @@ public class App extends Application {
         super.onCreate();
 
         instance = this;
+
+        fonts = new FontsOverride(this);
+        fonts.loadFonts();
     }
 
     public static App get() {

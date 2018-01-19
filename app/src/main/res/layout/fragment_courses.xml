@@ -11,6 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:background="#EBB3B9"
+        android:padding="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -26,7 +27,9 @@
                 android:id="@+id/textView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Cources" />
+                android:text="Courses"
+                android:textColor="@color/text_color_black"
+                android:textSize="@dimen/header_text_size" />
         </LinearLayout>
     </RelativeLayout>
 

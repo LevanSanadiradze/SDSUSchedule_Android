@@ -11,10 +11,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.root.sdsu_gmap.R;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 /**
  * Created by giorgi on 1/17/18.
@@ -53,8 +56,11 @@ public class ContactsFragment extends Fragment implements View.OnClickListener {
                 MapsInitializer.initialize(getActivity());
 
                 googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+                googleMap.addMarker(new MarkerOptions().position(new LatLng(41.704794, 44.790047)));
+                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(41.704794, 44.790047), 17));
             }
         });
+
 
         return view;
     }
@@ -80,7 +86,7 @@ public class ContactsFragment extends Fragment implements View.OnClickListener {
                 break;
             case R.id.direction:
                 Intent directionIntent = new Intent(Intent.ACTION_VIEW);
-                directionIntent.setData(Uri.parse("geo:" + "latitude," + "longitude"));//todo add correct latlng
+                directionIntent.setData(Uri.parse("geo:" + "41.704794," + "44.790047" + "?q=41.704794,44.790047"));//todo add correct latlng
                 startActivity(directionIntent);
                 break;
         }
