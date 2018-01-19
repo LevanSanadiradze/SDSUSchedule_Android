@@ -9,8 +9,8 @@
         android:id="@+id/header"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:background="#EBB3B9"
+        android:background="@color/header_background"
+        android:padding="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -24,20 +24,25 @@
 
             <TextView
                 android:id="@+id/textView"
+                android:textSize="@dimen/header_text_size"
+                android:textColor="@color/text_color_black"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Announcements" />
+                android:text="@string/announcements_header_title" />
         </LinearLayout>
     </RelativeLayout>
 
-    <ExpandableListView
+    <ListView
         android:id="@+id/listview"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:groupIndicator="@null"
+        android:divider="#00ffffff"
+        android:layout_margin="8dp"
+        android:dividerHeight="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/header" />
-
 
 </android.support.constraint.ConstraintLayout>

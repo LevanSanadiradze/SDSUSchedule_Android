@@ -6,4 +6,6 @@
     <string name="navigation_drawer_close">Close menu</string>
 
     <string name="action_settings">Settings</string>
+    <string name="announcements_header_title">Announcements</string>
+    <string name="contact_header_title">Contact</string>
 </resources>

@@ -7,7 +7,9 @@ import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ExpandableListView;
+import android.widget.AdapterView;
+import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.root.sdsu_gmap.App;
@@ -28,7 +30,7 @@ import java.util.List;
 
 public class AnnouncementsFragment extends Fragment {
 
-    private ExpandableListView listView;
+    private ListView listView;
     private AnnouncementsAdapter adapter;
 
     @Nullable
@@ -37,16 +39,20 @@ public class AnnouncementsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_announcements, container, false);
 
         adapter = new AnnouncementsAdapter(getActivity());
-        listView = (ExpandableListView) view.findViewById(R.id.listview);
+        listView = (ListView) view.findViewById(R.id.listview);
         listView.setAdapter(adapter);
 
-        listView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public boolean onGroupClick(ExpandableListView expandableListView, View view, int i, long l) {
-
-                //todo change background color
-
-                return false;
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                TextView textView = view.findViewById(R.id.text);
+                if (view.findViewById(R.id.text).getVisibility() == View.VISIBLE) {
+                    textView.setVisibility(View.GONE);
+                    view.setBackgroundResource(R.drawable.announcement_list_row_background);
+                } else {
+                    textView.setVisibility(View.VISIBLE);
+                    view.setBackgroundResource(R.drawable.announcement_list_child_background);
+                }
             }
         });
 
@@ -65,6 +71,7 @@ public class AnnouncementsFragment extends Fragment {
                     Toast.makeText(getActivity(), "Unexpected Error, Please check your internet connection.", Toast.LENGTH_LONG).show();
                     return;
                 }
+
 
                 HashMap<String, Object> Response = (HashMap<String, Object>) data.first;
 

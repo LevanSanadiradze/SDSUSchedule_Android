@@ -10,6 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.example.root.sdsu_gmap.R;
+import com.example.root.sdsu_gmap.helper.Utils;
 import com.example.root.sdsu_gmap.models.Course;
 import com.example.root.sdsu_gmap.models.Lecture;
 
@@ -76,8 +77,9 @@ public class CoursesListAdapter extends ArrayAdapter<Course> {
         for (int i = 0; i < course.getLectures().size(); i++) {
             Lecture lecture = course.getLectures().get(i);
             schedule = schedule + lecture.getStartHour() + ":" + lecture.getStartMinute() + "-" + lecture.getEndHour() + ":" + lecture.getEndMinute() +
-                    " " + getDay(lecture.getDay()) + "\n";
+                    " " + Utils.getDay(lecture.getDay()) + "\n";
         }
+
         holder.name.setText(course.getCourse());
         holder.schedule.setText(schedule);
         holder.professor.setText(course.getInstructor());
@@ -89,24 +91,5 @@ public class CoursesListAdapter extends ArrayAdapter<Course> {
         TextView name;
         TextView professor;
         TextView schedule;
-    }
-
-    private String getDay(String day) {
-        switch (day) {
-            case "M":
-                return "Monday";
-            case "T":
-                return "Tuesday";
-            case "W":
-                return "Wednesday";
-            case "Th":
-                return "Thursday";
-            case "F":
-                return "Friday";
-            case "S":
-                return "Saturday";
-            default:
-                return "";
-        }
     }
 }

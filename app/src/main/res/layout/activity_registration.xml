@@ -109,6 +109,6 @@
         app:layout_constraintHorizontal_bias="0.6"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:src="@drawable/ic_sandiego"/>
+        app:srcCompat="@drawable/ic_sandiego" />
 
 </android.support.constraint.ConstraintLayout>

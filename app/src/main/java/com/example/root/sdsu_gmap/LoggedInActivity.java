@@ -32,6 +32,7 @@ import android.widget.Toast;
 
 import com.example.root.sdsu_gmap.fragments.AnnouncementsFragment;
 import com.example.root.sdsu_gmap.fragments.ClubsFragment;
+import com.example.root.sdsu_gmap.fragments.ContactsFragment;
 import com.example.root.sdsu_gmap.fragments.CoursesFragment;
 import com.example.root.sdsu_gmap.fragments.TasksFragment;
 import com.example.root.sdsu_gmap.models.Course;
@@ -242,7 +243,11 @@ public class LoggedInActivity extends AppCompatActivity
                     .replace(R.id.tabscontainer, fragment)
                     .commit();
         } else if (id == R.id.Contact_menuitem) {
-            tabsContainer.findViewById(R.id.Contact_tab).setVisibility(View.VISIBLE);
+//            tabsContainer.findViewById(R.id.Contact_tab).setVisibility(View.VISIBLE);
+            ContactsFragment fragment = new ContactsFragment();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.tabscontainer, fragment)
+                    .commit();
         } else if (id == R.id.Settings_menuitem) {
             tabsContainer.findViewById(R.id.Settings_tab).setVisibility(View.VISIBLE);
         }

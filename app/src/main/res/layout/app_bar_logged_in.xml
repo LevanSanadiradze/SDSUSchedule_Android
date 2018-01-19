@@ -29,7 +29,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="16dp"
-                android:src="@drawable/ic_sandiego" />
+                app:srcCompat="@drawable/ic_sandiego" />
         </RelativeLayout>
     </android.support.design.widget.AppBarLayout>
 
