@@ -34,6 +34,7 @@ import com.example.root.sdsu_gmap.fragments.AnnouncementsFragment;
 import com.example.root.sdsu_gmap.fragments.ClubsFragment;
 import com.example.root.sdsu_gmap.fragments.ContactsFragment;
 import com.example.root.sdsu_gmap.fragments.CoursesFragment;
+import com.example.root.sdsu_gmap.fragments.SettingsFragment;
 import com.example.root.sdsu_gmap.fragments.TasksFragment;
 import com.example.root.sdsu_gmap.models.Course;
 import com.example.root.sdsu_gmap.models.Lecture;
@@ -249,7 +250,11 @@ public class LoggedInActivity extends AppCompatActivity
                     .replace(R.id.tabscontainer, fragment)
                     .commit();
         } else if (id == R.id.Settings_menuitem) {
-            tabsContainer.findViewById(R.id.Settings_tab).setVisibility(View.VISIBLE);
+//            tabsContainer.findViewById(R.id.Settings_tab).setVisibility(View.VISIBLE);
+            SettingsFragment fragment = new SettingsFragment();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.tabscontainer, fragment)
+                    .commit();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -424,7 +429,7 @@ public class LoggedInActivity extends AppCompatActivity
         int width = displayMetrics.widthPixels;
         int height = displayMetrics.heightPixels;
 
-        int dayWidth = (int) Math.floor((width - Constants.TIME_SIDE_WIDTH) / Constants.DAYS_SHOWN_IN_SCHEDULE_CALENDAR);
+        int dayWidth = (int) Math.floor((width - pixels) / Constants.DAYS_SHOWN_IN_SCHEDULE_CALENDAR);
         int hourHeight = (int) Math.floor(height / Constants.HOURS_SHOWN_IN_SCHEDULE_CALENDAR);
 
         ViewGroup.LayoutParams scheduleTimesContainerLP = scheduleTimesContainer.getLayoutParams();

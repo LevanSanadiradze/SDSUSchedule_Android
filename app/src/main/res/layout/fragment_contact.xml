@@ -132,7 +132,7 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@android:drawable/ic_menu_call" />
+                    app:srcCompat="@drawable/ic_phone" />
             </android.support.constraint.ConstraintLayout>
 
 
@@ -175,7 +175,7 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@android:drawable/ic_menu_call" />
+                    app:srcCompat="@drawable/ic_office" />
             </android.support.constraint.ConstraintLayout>
 
 
@@ -218,7 +218,7 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@android:drawable/ic_menu_call" />
+                    app:srcCompat="@drawable/ic_cell" />
             </android.support.constraint.ConstraintLayout>
 
             <android.support.constraint.ConstraintLayout
@@ -260,7 +260,7 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@android:drawable/ic_menu_call" />
+                    app:srcCompat="@drawable/ic_location_pin" />
             </android.support.constraint.ConstraintLayout>
 
             <com.google.android.gms.maps.MapView

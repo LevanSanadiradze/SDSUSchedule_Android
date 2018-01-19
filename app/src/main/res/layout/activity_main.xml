@@ -30,7 +30,7 @@
         app:layout_constraintGuide_percent="0.5" />
 
     <EditText
-        android:id="@+id/email"
+        android:id="@+id/confirm_passwod"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
@@ -59,7 +59,7 @@
         android:padding="12dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/email" />
+        app:layout_constraintTop_toBottomOf="@+id/confirm_passwod" />
 
     <TextView
         android:id="@+id/forgot_password"
@@ -95,7 +95,7 @@
         android:layout_marginStart="32dp"
         android:scaleType="fitCenter"
         android:layout_marginTop="32dp"
-        app:layout_constraintBottom_toTopOf="@+id/email"
+        app:layout_constraintBottom_toTopOf="@+id/confirm_passwod"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.6"
         app:layout_constraintStart_toStartOf="parent"

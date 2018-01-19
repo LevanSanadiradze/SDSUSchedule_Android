@@ -43,7 +43,7 @@ public class ScheduleFileParser {
                     (String) thisCourse.get("Course"),
                     (String) thisCourse.get("CourseDescription"),
                     (String) thisCourse.get("CourseFormat"),
-                    Integer.parseInt((String) thisCourse.get("Units")),
+                    Integer.parseInt(thisCourse.get("Units").equals("null") ? "0" : (String) thisCourse.get("Units")),
                     (String) thisCourse.get("ScheduleID"),
                     (String) thisCourse.get("Instructor"),
                     Lectures

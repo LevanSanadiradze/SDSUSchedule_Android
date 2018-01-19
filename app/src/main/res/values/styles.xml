@@ -17,4 +17,8 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="spinnerArrow" parent="Base.Widget.AppCompat.Spinner">
+        <item name="android:background">@android:drawable/edit_text</item>
+    </style>
+
 </resources>

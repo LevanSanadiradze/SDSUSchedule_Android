@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void initView() {
         login = (Button) findViewById(R.id.login);
-        email = (EditText) findViewById(R.id.email);
+        email = (EditText) findViewById(R.id.password);
         password = (EditText) findViewById(R.id.password);
         forgotPassword = (TextView) findViewById(R.id.forgot_password);
         register = (TextView) findViewById(R.id.register);
@@ -71,7 +71,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(RegActivity);
                 break;
             case R.id.forgot_password:
-
+                Intent forgotIntent = new Intent(MainActivity.this, ForgotPasswordActivity.class);
+                startActivity(forgotIntent);
                 break;
         }
     }
