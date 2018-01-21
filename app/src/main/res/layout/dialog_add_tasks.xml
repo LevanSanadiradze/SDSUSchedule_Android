@@ -44,16 +44,15 @@
 
         </android.support.constraint.ConstraintLayout>
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:orientation="vertical"
-            android:background="#C69AA0"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:background="#C69AA0">
 
             <LinearLayout
+                android:id="@+id/subjectLayout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="0"
+                android:layout_height="wrap_content"
                 android:orientation="vertical">
 
                 <Button
@@ -65,12 +64,14 @@
                     android:drawableRight="@android:drawable/arrow_down_float"
                     android:text="Choose Subject" />
 
+
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/deadlineLayout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="0"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/subjectLayout"
                 android:orientation="vertical">
 
                 <Button
@@ -85,19 +86,30 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/textLayout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="100dp"
+                android:layout_margin="8dp"
+                android:background="@color/text_color_white"
+                android:layout_below="@id/deadlineLayout">
 
                 <EditText
                     android:id="@+id/editText"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:ems="10"
+                    android:background="@color/transparent"
                     android:inputType="textMultiLine" />
             </LinearLayout>
 
-        </LinearLayout>
+            <ListView
+                android:id="@+id/listview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/subjectLayout"
+                android:background="@drawable/dialog_bottom_corners"
+                android:visibility="gone" />
+        </RelativeLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -107,8 +119,8 @@
                 android:id="@+id/done"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Done"
-                android:background="@drawable/dialog_bottom_corners" />
+                android:background="@drawable/dialog_bottom_corners"
+                android:text="Done" />
         </LinearLayout>
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>

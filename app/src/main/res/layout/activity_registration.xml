@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/loginBackground"
-    tools:context="com.example.root.sdsu_gmap.RegistrationActivity">
+    tools:context="com.systemcorp.sdsu.schedule.RegistrationActivity">
 
     <android.support.constraint.Guideline
         android:id="@+id/guideline"

@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/ScheduleCalendar_Bg"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.example.root.sdsu_gmap.LoggedInActivity"
+    tools:context="com.systemcorp.sdsu.schedule.LoggedInActivity"
     tools:showIn="@layout/app_bar_logged_in">
 
 

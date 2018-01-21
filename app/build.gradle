@@ -4,7 +4,7 @@ android {
     compileSdkVersion 26
     buildToolsVersion "26.0.2"
     defaultConfig {
-        applicationId "com.example.root.sdsu_gmap"
+        applicationId "com.systemcorp.sdsu.schedule"
         minSdkVersion 19
         targetSdkVersion 26
         versionCode 1
@@ -30,7 +30,11 @@ dependencies {
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.github.LevanSanadiradze:JSONParser_Android:1.0'
     compile 'com.github.LevanSanadiradze:TabbedScrollView_Android:1.6'
+    compile 'com.google.firebase:firebase-core:11.8.0'
+    compile 'com.google.firebase:firebase-messaging:11.8.0'
 
     testCompile 'junit:junit:4.12'
     implementation 'com.google.android.gms:play-services-maps:11.8.0'
 }
+
+apply plugin: 'com.google.gms.google-services'

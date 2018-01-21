@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "735416402923",
+    "firebase_url": "https://sdsu-schedule-1515442971162.firebaseio.com",
+    "project_id": "sdsu-schedule-1515442971162",
+    "storage_bucket": "sdsu-schedule-1515442971162.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:735416402923:android:5c74d089b5203b01",
+        "android_client_info": {
+          "package_name": "com.systemcorp.sdsu.schedule"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "735416402923-jl0mr45e9fel5q2debkrkb084cvfq7fj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA4pl1Mf6Tm3w-J9HXE25m90ei2TbbkeIU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
