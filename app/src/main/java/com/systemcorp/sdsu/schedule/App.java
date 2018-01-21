@@ -1,5 +1,6 @@
 package com.systemcorp.sdsu.schedule;
 
+import android.app.Activity;
 import android.app.Application;
 
 import com.systemcorp.sdsu.schedule.font.FontsOverride;
@@ -45,5 +46,11 @@ public class App extends Application {
 
     public void setCourses(List<Course> courses) {
         this.courses = courses;
+    }
+
+    public void clearCookies(Activity activity) {
+        String FILENAME = Constants.COOKIES_FILE_NAME;
+
+        activity.deleteFile(FILENAME);
     }
 }

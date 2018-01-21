@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,12 +13,18 @@ import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.systemcorp.sdsu.schedule.App;
+import com.systemcorp.sdsu.schedule.Constants;
+import com.systemcorp.sdsu.schedule.NetworkCommunicator;
 import com.systemcorp.sdsu.schedule.R;
 import com.systemcorp.sdsu.schedule.models.ClubsAnnouncement;
 import com.systemcorp.sdsu.schedule.models.PollDataClass;
 
+import java.net.CookieManager;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -94,6 +101,7 @@ public class ClubsListAdapter extends ArrayAdapter<ClubsAnnouncement> {
                 RadioButton radioButton = new RadioButton(context);
                 PollDataClass pollData = announcement.getPollData().get(i);
                 radioButton.setText(pollData.getAnswer());
+                radioButton.setId(pollData.getId());
                 holder.radioGroup.addView(radioButton);
 
                 if (pollData.isVoted()) {
@@ -102,6 +110,35 @@ public class ClubsListAdapter extends ArrayAdapter<ClubsAnnouncement> {
             }
         }
 
+        holder.radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int i) {
+                ArrayList<String> parameters = new ArrayList<>();
+                parameters.add("announcementid=" + announcement.getId());
+                parameters.add("voteid=" + i);
+
+                new NetworkCommunicator(Constants.HOST + "voteOnClubAnnouncement.php", parameters, App.get().getCookies()) {
+                    @Override
+                    protected void onPostExecute(Pair<Object, CookieManager> data) {
+                        super.onPostExecute(data);
+
+                        if (data == null) {
+                            Toast.makeText(context, "Unexpected Error, Please check your internet connection.", Toast.LENGTH_LONG).show();
+                            return;
+                        }
+
+                        HashMap<String, Object> Response = (HashMap<String, Object>) data.first;
+
+                        String ErrorCode = Response.get("ErrorCode").toString();
+
+                        if (!ErrorCode.equals("0")) {
+                            Toast.makeText(context, "Unexpected Error, Please check your internet connection.", Toast.LENGTH_LONG).show();
+                            return;
+                        }
+                    }
+                }.execute();
+            }
+        });
         return view;
     }
 

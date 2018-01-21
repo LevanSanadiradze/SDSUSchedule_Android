@@ -77,7 +77,7 @@ public class AnnouncementsAdapter extends ArrayAdapter<AnnouncementsData> {
         holder.title.setText(announcement.getTitle());
         holder.text.setText(announcement.getText());
 
-        if (announcement.isSeen()) {
+        if (!announcement.isSeen()) {
             holder.title.setTypeface(null, Typeface.BOLD);
             holder.time.setTypeface(null, Typeface.BOLD);
             holder.text.setTypeface(null, Typeface.BOLD);

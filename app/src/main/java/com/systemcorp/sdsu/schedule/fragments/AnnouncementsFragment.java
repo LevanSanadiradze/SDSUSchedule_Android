@@ -1,6 +1,7 @@
 package com.systemcorp.sdsu.schedule.fragments;
 
 import android.app.Fragment;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Pair;
@@ -44,14 +45,46 @@ public class AnnouncementsFragment extends Fragment {
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                TextView textView = view.findViewById(R.id.text);
+            public void onItemClick(AdapterView<?> adapterView, final View view, int i, long l) {
+                ArrayList<String> parameters = new ArrayList<>();
+                parameters.add("announcementid=" + adapter.getItem(i).getId());
+
+                final TextView textView = view.findViewById(R.id.text);
                 if (view.findViewById(R.id.text).getVisibility() == View.VISIBLE) {
                     textView.setVisibility(View.GONE);
                     view.setBackgroundResource(R.drawable.announcement_list_row_background);
                 } else {
                     textView.setVisibility(View.VISIBLE);
                     view.setBackgroundResource(R.drawable.announcement_list_child_background);
+                }
+
+                if (!adapter.getItem(i).isSeen()) {
+                    new NetworkCommunicator(Constants.HOST + "voteOnClubAnnouncement.php", parameters, App.get().getCookies()) {
+                        @Override
+                        protected void onPostExecute(Pair<Object, CookieManager> data) {
+                            super.onPostExecute(data);
+
+                            if (data == null) {
+                                Toast.makeText(getActivity(), "Unexpected Error, Please check your internet connection.", Toast.LENGTH_LONG).show();
+                                return;
+                            }
+
+                            HashMap<String, Object> Response = (HashMap<String, Object>) data.first;
+
+                            String ErrorCode = Response.get("ErrorCode").toString();
+
+                            if (!ErrorCode.equals("0")) {
+                                Toast.makeText(getActivity(), "Unexpected Error, Please check your internet connection.", Toast.LENGTH_LONG).show();
+                                return;
+                            } else {
+                                textView.setTypeface(null, Typeface.NORMAL);
+                                TextView date = (TextView) view.findViewById(R.id.date);
+                                TextView title = (TextView) view.findViewById(R.id.title);
+                                title.setTypeface(null, Typeface.NORMAL);
+                                date.setTypeface(null, Typeface.NORMAL);
+                            }
+                        }
+                    }.execute();
                 }
             }
         });
