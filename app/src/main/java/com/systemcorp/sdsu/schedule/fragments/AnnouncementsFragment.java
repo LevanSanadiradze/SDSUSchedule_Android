@@ -105,7 +105,6 @@ public class AnnouncementsFragment extends Fragment {
                     return;
                 }
 
-
                 HashMap<String, Object> Response = (HashMap<String, Object>) data.first;
 
                 String ErrorCode = Response.get("ErrorCode").toString();

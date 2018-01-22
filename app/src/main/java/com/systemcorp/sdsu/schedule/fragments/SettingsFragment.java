@@ -1,13 +1,8 @@
 package com.systemcorp.sdsu.schedule.fragments;
 
-import android.app.AlarmManager;
 import android.app.Fragment;
-import android.app.PendingIntent;
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,13 +12,7 @@ import android.widget.Spinner;
 import android.widget.Switch;
 
 import com.systemcorp.sdsu.schedule.App;
-import com.systemcorp.sdsu.schedule.Constants;
-import com.systemcorp.sdsu.schedule.MainActivity;
-import com.systemcorp.sdsu.schedule.NetworkCommunicator;
 import com.systemcorp.sdsu.schedule.R;
-
-import java.net.CookieManager;
-import java.util.ArrayList;
 
 /**
  * Created by giorgi on 1/19/18.
@@ -84,38 +73,8 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
                 clubsSwitch.setChecked(!clubsSwitch.isChecked());
                 break;
             case R.id.logout:
-                logout();
+                App.get().logout(getActivity());
                 break;
         }
-    }
-
-    private void logout() {
-        new NetworkCommunicator(Constants.HOST + "logout.php", new ArrayList<String>(), App.get().getCookies()) {
-            @Override
-            protected void onPostExecute(Pair<Object, CookieManager> success) {
-                super.onPostExecute(success);
-
-                App.get().setCookies("");
-                App.get().setCourses(null);
-                App.get().clearCookies(getActivity());
-
-                Intent mStartActivity = new Intent(getActivity(), MainActivity.class);
-                mStartActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                mStartActivity.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                mStartActivity.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-                mStartActivity.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                int mPendingIntentId = 123456;
-                PendingIntent mPendingIntent = PendingIntent.getActivity(getActivity(), mPendingIntentId, mStartActivity,
-                        PendingIntent.FLAG_CANCEL_CURRENT);
-                AlarmManager mgr = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
-                mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 10, mPendingIntent);
-
-
-                getActivity().finishAffinity();
-
-
-                System.exit(0);
-            }
-        }.execute();
     }
 }

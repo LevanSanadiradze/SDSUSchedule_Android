@@ -1,5 +1,6 @@
 package com.systemcorp.sdsu.schedule;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -32,7 +33,7 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
     }
 
     private void initView() {
-        email = (EditText) findViewById(R.id.password);
+        email = (EditText) findViewById(R.id.email);
         password = (EditText) findViewById(R.id.password);
         confirmPassword = (EditText) findViewById(R.id.confirm_password);
         checkBox = (CheckBox) findViewById(R.id.checkBox);
@@ -104,9 +105,11 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
                 String ErrorCode = Response.get("ErrorCode").toString();
                 String Status = Response.get("Status").toString();
 
-                if (ErrorCode.equals("0") && Status.equals("0"))
+                if (ErrorCode.equals("0") && Status.equals("0")) {
+                    Intent intent = new Intent(RegistrationActivity.this, MainActivity.class);
+                    startActivity(intent);
                     finish();
-                else if (ErrorCode.equals("1"))
+                } else if (ErrorCode.equals("1"))
                     return;//TODO
                 else if (ErrorCode.equals("2"))
                     return;//TODO

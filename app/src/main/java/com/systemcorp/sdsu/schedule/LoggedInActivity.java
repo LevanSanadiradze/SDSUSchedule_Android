@@ -284,9 +284,10 @@ public class LoggedInActivity extends AppCompatActivity
 
                 HashMap<String, Object> Response = (HashMap<String, Object>) data.first;
 
-                if (Response.get("ErrorCode").equals("-1"))
-                    finish();
-                else if (Response.get("ErrorCode").equals("0")) {
+                if (Response.get("ErrorCode").equals("-1")) {
+                    Toast.makeText(ctx, "Error loading schedule", Toast.LENGTH_LONG).show();
+                    App.get().logout(LoggedInActivity.this);
+                } else if (Response.get("ErrorCode").equals("0")) {
                     if (Response.get("Schedule").equals("")) {
                         AlertDialog.Builder builder;
 
@@ -319,8 +320,6 @@ public class LoggedInActivity extends AppCompatActivity
                 }
             }
         }.execute();
-
-
     }
 
     private void uploadStudentSchedule(String content) {
@@ -423,7 +422,7 @@ public class LoggedInActivity extends AppCompatActivity
 
         TextView StudentNameTextView = findViewById(R.id.StudentNameTextView);
         String StudentName = studentInfo.getFirstName() + " ";
-        StudentName += !studentInfo.getMiddleName().equals("") ? studentInfo.getMiddleName() + " " : "";
+        StudentName += !studentInfo.getMiddleName().equals("null") ? studentInfo.getMiddleName() + " " : "";
         StudentName += studentInfo.getLastName();
         StudentNameTextView.setText(StudentName);
 

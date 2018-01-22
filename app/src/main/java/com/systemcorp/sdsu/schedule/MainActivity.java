@@ -12,6 +12,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.messaging.FirebaseMessaging;
+
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -38,6 +40,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         App.get().setCookies(getCookiesOnInternalStorage());
 
         if (!App.get().getCookies().equals("")) {
+            FirebaseMessaging.getInstance().subscribeToTopic("/topics/administration");
             Intent LoggedInActivity = new Intent(getBaseContext(), LoggedInActivity.class);
             startActivity(LoggedInActivity);
             finish();
