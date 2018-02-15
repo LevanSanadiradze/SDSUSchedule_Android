@@ -102,4 +102,6 @@ public class NetworkCommunicator extends AsyncTask<Void, Void, Pair<Object, Cook
     protected void onCancelled() {
         super.onCancelled();
     }
+
+
 }

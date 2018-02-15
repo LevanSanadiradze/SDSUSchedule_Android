@@ -47,6 +47,7 @@ import com.systemcorp.sdsu.schedule.fragments.AnnouncementsFragment;
 import com.systemcorp.sdsu.schedule.fragments.ClubsFragment;
 import com.systemcorp.sdsu.schedule.fragments.ContactsFragment;
 import com.systemcorp.sdsu.schedule.fragments.CoursesFragment;
+import com.systemcorp.sdsu.schedule.fragments.QuizFragment;
 import com.systemcorp.sdsu.schedule.fragments.SettingsFragment;
 import com.systemcorp.sdsu.schedule.fragments.TasksFragment;
 import com.systemcorp.sdsu.schedule.models.Course;
@@ -242,7 +243,11 @@ public class LoggedInActivity extends AppCompatActivity
                     .replace(R.id.tabscontainer, fragment)
                     .commit();
         } else if (id == R.id.Events_menuitem) {
-            tabsContainer.findViewById(R.id.Events_tab).setVisibility(View.VISIBLE);
+//            tabsContainer.findViewById(R.id.Events_tab).setVisibility(View.VISIBLE);
+            QuizFragment fragment = new QuizFragment();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.tabscontainer, fragment)
+                    .commit();
         } else if (id == R.id.Clubs_menuitem) {
 //            tabsContainer.findViewById(R.id.Clubs_tab).setVisibility(View.VISIBLE);
             ClubsFragment fragment = new ClubsFragment();
