@@ -48,6 +48,7 @@ import com.systemcorp.sdsu.schedule.fragments.ClubsFragment;
 import com.systemcorp.sdsu.schedule.fragments.ContactsFragment;
 import com.systemcorp.sdsu.schedule.fragments.CoursesFragment;
 import com.systemcorp.sdsu.schedule.fragments.QuizFragment;
+import com.systemcorp.sdsu.schedule.fragments.QuizListFragment;
 import com.systemcorp.sdsu.schedule.fragments.SettingsFragment;
 import com.systemcorp.sdsu.schedule.fragments.TasksFragment;
 import com.systemcorp.sdsu.schedule.models.Course;
@@ -283,7 +284,7 @@ public class LoggedInActivity extends AppCompatActivity
 
                 if (data == null) {
                     Toast.makeText(ctx, "Unexpected Error, Please check your internet connection.", Toast.LENGTH_LONG).show();
-                    finish();
+//                    finish();
                     return;
                 }
 
@@ -463,8 +464,11 @@ public class LoggedInActivity extends AppCompatActivity
                     fragmentManager.beginTransaction()
                             .replace(R.id.tabscontainer, fragment)
                             .commit();
-                } else if (id.equals("Events")) {
-                    tabsContainer.findViewById(R.id.Events_tab).setVisibility(View.VISIBLE);
+                } else if (id.equals("Quizzes")) {
+                    QuizListFragment fragment = new QuizListFragment();
+                    fragmentManager.beginTransaction()
+                            .replace(R.id.tabscontainer, fragment)
+                            .commit();
                 } else if (id.equals("Clubs")) {
 //            tabsContainer.findViewById(R.id.Clubs_tab).setVisibility(View.VISIBLE);
                     ClubsFragment fragment = new ClubsFragment();
@@ -734,7 +738,7 @@ public class LoggedInActivity extends AppCompatActivity
                         super.onPostExecute(data);
 
                         if (data == null) {
-                            Toast.makeText(ctx, "Unexpected Error, Please check your internet connection.", Toast.LENGTH_LONG).show();
+                            Toast.makeText(ctx, "Unexpected Error, Please Please check your internet connection.", Toast.LENGTH_LONG).show();
                             return;
                         }
 

@@ -60,27 +60,27 @@ public class QuizFragment extends Fragment implements View.OnClickListener {
                 break;
             case R.id.a_option_holder:
                 a.setBackgroundColor(Color.parseColor("#9B0055"));
-                b.setBackgroundColor(Color.parseColor("#fff"));
-                c.setBackgroundColor(Color.parseColor("#fff"));
-                d.setBackgroundColor(Color.parseColor("#fff"));
+                b.setBackgroundColor(Color.parseColor("#FFFFFF"));
+                c.setBackgroundColor(Color.parseColor("#FFFFFF"));
+                d.setBackgroundColor(Color.parseColor("#FFFFFF"));
                 break;
             case R.id.b_option_holder:
                 b.setBackgroundColor(Color.parseColor("#9B0055"));
-                a.setBackgroundColor(Color.parseColor("#fff"));
-                c.setBackgroundColor(Color.parseColor("#fff"));
-                d.setBackgroundColor(Color.parseColor("#fff"));
+                a.setBackgroundColor(Color.parseColor("#FFFFFF"));
+                c.setBackgroundColor(Color.parseColor("#FFFFFF"));
+                d.setBackgroundColor(Color.parseColor("#FFFFFF"));
                 break;
             case R.id.c_option_holder:
                 c.setBackgroundColor(Color.parseColor("#9B0055"));
-                b.setBackgroundColor(Color.parseColor("#fff"));
-                a.setBackgroundColor(Color.parseColor("#fff"));
-                d.setBackgroundColor(Color.parseColor("#fff"));
+                b.setBackgroundColor(Color.parseColor("#FFFFFF"));
+                a.setBackgroundColor(Color.parseColor("#FFFFFF"));
+                d.setBackgroundColor(Color.parseColor("#FFFFFF"));
                 break;
             case R.id.d_option_holder:
                 d.setBackgroundColor(Color.parseColor("#9B0055"));
-                b.setBackgroundColor(Color.parseColor("#fff"));
-                c.setBackgroundColor(Color.parseColor("#fff"));
-                a.setBackgroundColor(Color.parseColor("#fff"));
+                b.setBackgroundColor(Color.parseColor("#FFFFFF"));
+                c.setBackgroundColor(Color.parseColor("#FFFFFF"));
+                a.setBackgroundColor(Color.parseColor("#FFFFFF"));
                 break;
         }
     }

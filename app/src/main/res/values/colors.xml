@@ -14,7 +14,7 @@
 
     <color name="loginBackground">#CD4251</color>
     <color name="text_color_white">#fff</color>
-    <color name="text_color_black">#000</color>
+    <color name="text_color_black">#000000</color>
 
     <color name="fragment_header">#EBB3B9</color>
     <color name="header_background">#EBB3B9</color>

@@ -39,7 +39,7 @@ public class MenuAdapter extends ArrayAdapter<MenuItem> {
         data.add(new MenuItem(R.drawable.ic_announcement, "Announcements"));
         data.add(new MenuItem(R.drawable.ic_courses, "Courses"));
         data.add(new MenuItem(R.drawable.ic_tasks, "Tasks"));
-        data.add(new MenuItem(R.drawable.ic_events, "Events"));
+        data.add(new MenuItem(R.drawable.ic_events, "Quizzes"));
         data.add(new MenuItem(R.drawable.ic_clubs, "Clubs"));
         data.add(new MenuItem(R.drawable.ic_contact, "Contact"));
 
